@@ -23,6 +23,7 @@ export function PaletteDisplay({
 }: PaletteDisplayProps) {
   // Create a stable ref object - MUST be before any conditional returns
   const paletteRefs = useRef<Map<number, HTMLDivElement | null>>(new Map());
+  const lastAccessibilityStates = useRef<Record<number, boolean>>({});
 
   // Memoize the set ref callback - MUST be before any conditional returns
   const setRef = useCallback(
@@ -32,50 +33,44 @@ export function PaletteDisplay({
     []
   );
 
-  // Scroll active palette to center when accessibility is toggled - MUST be before any conditional returns
+  // Function to center the active palette
+  const centerActivePalette = useCallback((index: number) => {
+    const element = paletteRefs.current.get(index);
+    if (!element) return;
+
+    // Use the built-in scrollIntoView with block: "center" for perfect centering
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }, []);
+
+  // Detect when accessibility is newly opened for a palette
   useEffect(() => {
-    if (activePaletteIndex === null) return;
+    // Find the index that was just toggled on
+    for (let index = 0; index < palettes.length; index++) {
+      const wasOpen = !!lastAccessibilityStates.current[index];
+      const isNowOpen = !!accessibilityStates[index];
 
-    // Create a separate function for the scrolling logic
-    const scrollToActive = () => {
-      const element = paletteRefs.current.get(activePaletteIndex);
-      if (!element) return;
+      // If this palette's accessibility view was just opened, center it
+      if (!wasOpen && isNowOpen) {
+        // Longer delay to ensure the accessibility panel has fully expanded
+        const delay = 200;
+        setTimeout(() => centerActivePalette(index), delay);
+      }
+    }
 
-      // Get the element's position and dimensions
-      const rect = element.getBoundingClientRect();
+    // Store current state for next comparison
+    lastAccessibilityStates.current = { ...accessibilityStates };
+  }, [accessibilityStates, centerActivePalette, palettes.length]);
 
-      // Account for the fixed header (approximately 56px)
-      const headerOffset = 56;
-
-      // Calculate the scroll position to center the element
-      // Add a small adjustment to better center the accessibility panel
-      const adjustment = 60; // Additional offset to center the accessibility details better
-      const windowHeight = window.innerHeight;
-      const elementHeight = rect.height;
-      const elementTop = window.scrollY + rect.top;
-
-      // Calculate the ideal position that centers both the palette and its details
-      const scrollPosition =
-        elementTop -
-        windowHeight / 2 +
-        elementHeight / 2 -
-        headerOffset +
-        adjustment;
-
-      // Scroll to the calculated position
-      window.scrollTo({
-        top: scrollPosition,
-        behavior: "smooth",
-      });
-    };
-
-    // Use requestAnimationFrame for better timing
-    const timerId = setTimeout(() => {
-      requestAnimationFrame(scrollToActive);
-    }, 125);
-
-    return () => clearTimeout(timerId);
-  }, [activePaletteIndex, accessibilityStates]);
+  // Also center when active palette changes
+  useEffect(() => {
+    if (activePaletteIndex !== null) {
+      const delay = 200;
+      setTimeout(() => centerActivePalette(activePaletteIndex), delay);
+    }
+  }, [activePaletteIndex, centerActivePalette]);
 
   // Early return AFTER all hooks are defined
   if (!palettes || palettes.length === 0) {
