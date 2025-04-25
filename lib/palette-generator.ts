@@ -1,4 +1,5 @@
 // Add import of mock data module at the top of the file
+import axios from "axios";
 import { getMockPalettes } from "./mock-palettes";
 
 // Mapping of feelings to base colors (in HSL format for easier manipulation)
@@ -233,23 +234,10 @@ export async function generatePalettes(
 
   // Continue with the real API call if mock data is not enabled
   try {
-    const response = await fetch("/api/generate-palettes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // Now we pass the actual feeling entered by the user
-      body: JSON.stringify({ feeling }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to generate palettes");
-    }
-
-    const data: PaletteResponse = await response.json();
+    const response = await axios.post("/api/generate-palettes", { feeling });
 
     // Return the palettes directly
-    return data.palettes;
+    return response.data.palettes;
   } catch (error) {
     console.error("Error generating palettes:", error);
     // Return some fallback palettes in case of error
