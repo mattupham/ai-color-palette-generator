@@ -4,7 +4,7 @@ import { CopyButton } from "@/components/copy-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { analyzeContrast } from "@/lib/color-accessibility";
-import { CheckCircle2, Info, XCircle } from "lucide-react";
+import { CheckCircle2, ChevronDown, XCircle } from "lucide-react";
 
 interface AccessibilityViewProps {
   colors: string[];
@@ -144,8 +144,12 @@ export function AccessibilityToggle({
       onClick={onToggleAccessibility}
       className="text-xs flex items-center gap-1 px-2 h-7 min-w-[140px] justify-center"
     >
-      <Info className="h-3.5 w-3.5" />
-      {showAccessibility ? "Hide Accessibility" : "Show Accessibility"}
+      <ChevronDown
+        className={`h-3.5 w-3.5 transition-transform duration-300 ${
+          showAccessibility ? "rotate-180" : ""
+        }`}
+      />
+      Accessibility Details
     </Button>
   );
 }
