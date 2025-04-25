@@ -4,7 +4,7 @@ import {
   getMockPalettes,
   usePaletteMutation,
 } from "@/lib/palette-queries";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Define special preset feelings that use mock data
 const PRESET_FEELINGS = ["professional", "summer"];
@@ -21,6 +21,11 @@ export function usePaletteGenerator() {
     isError,
     error,
   } = usePaletteMutation();
+
+  // Load professional palette by default
+  useEffect(() => {
+    generatePalette("professional");
+  }, []);
 
   // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
