@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Palette } from "../lib/palette-generator";
 import { getFallbackPalettes, usePaletteQuery } from "../lib/palette-queries";
 
 interface PaletteGeneratorProps {
@@ -49,11 +50,11 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
           <p>Error loading palettes: {error?.message}</p>
           <div className="fallback-palettes">
             <h3>Using fallback palettes instead:</h3>
-            {getFallbackPalettes().map((palette, index) => (
+            {getFallbackPalettes().map((palette: Palette, index: number) => (
               <div key={index} className="palette">
                 <h4>{palette.name}</h4>
                 <div className="colors">
-                  {palette.colors.map((color, i) => (
+                  {palette.colors.map((color: string, i: number) => (
                     <div
                       key={i}
                       className="color-preview"
@@ -72,11 +73,11 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
       {/* Success state with palettes */}
       {!isPending && !isError && palettes && (
         <div className="palettes">
-          {palettes.map((palette, index) => (
+          {palettes.map((palette: Palette, index: number) => (
             <div key={index} className="palette">
               <h3>{palette.name}</h3>
               <div className="colors">
-                {palette.colors.map((color, i) => (
+                {palette.colors.map((color: string, i: number) => (
                   <div
                     key={i}
                     className="color-preview"

@@ -17,14 +17,14 @@ const fetchPalettes = async (feeling: string): Promise<PaletteResponse> => {
 
 // React Query hook for palette generation
 export const usePaletteQuery = (feeling: string, useMockData: boolean) => {
-  return useQuery({
+  return useQuery<PaletteResponse, Error, Palette[]>({
     queryKey: ["palettes", feeling],
     queryFn: () => fetchPalettes(feeling),
     select: (data) => data.palettes,
     enabled: !useMockData && !!feeling,
     // If mock data is enabled, don't execute the query
     placeholderData: useMockData
-      ? { palettes: getMockPalettes(feeling), feeling }
+      ? { palettes: getMockPalettes(feeling) || [], feeling }
       : undefined,
   });
 };
@@ -43,7 +43,7 @@ export async function generatePalettes(
 ): Promise<Palette[]> {
   if (useMockData) {
     console.log("Using mock data for feeling:", feeling);
-    return getMockPalettes(feeling);
+    return getMockPalettes(feeling) || [];
   }
 
   try {
