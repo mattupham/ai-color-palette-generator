@@ -1,6 +1,4 @@
 // Add import of mock data module at the top of the file
-import axios from "axios";
-import { getMockPalettes } from "./mock-palettes";
 
 // Mapping of feelings to base colors (in HSL format for easier manipulation)
 const feelingColorMap: Record<
@@ -214,49 +212,4 @@ export interface Palette {
   name: string;
   colors: string[];
   roles?: string[];
-}
-
-interface PaletteResponse {
-  palettes: Palette[];
-  feeling: string;
-}
-
-// Function to generate palettes using the OpenAI API
-export async function generatePalettes(
-  feeling: string,
-  useMockData: boolean
-): Promise<Palette[]> {
-  if (useMockData) {
-    console.log("Using mock data for feeling:", feeling);
-    // Return mock palettes based on feeling
-    return getMockPalettes(feeling);
-  }
-
-  // Continue with the real API call if mock data is not enabled
-  try {
-    const response = await axios.post("/api/generate-palettes", { feeling });
-
-    // Return the palettes directly
-    return response.data.palettes;
-  } catch (error) {
-    console.error("Error generating palettes:", error);
-    // Return some fallback palettes in case of error
-    return [
-      {
-        name: "Fallback Warm",
-        colors: ["#F8B195", "#F67280", "#C06C84", "#6C5B7B", "#355C7D"],
-        roles: ["background", "primary", "secondary", "accent", "text"],
-      },
-      {
-        name: "Fallback Natural",
-        colors: ["#99B898", "#FECEAB", "#FF847C", "#E84A5F", "#2A363B"],
-        roles: ["background", "primary", "secondary", "accent", "text"],
-      },
-      {
-        name: "Fallback Soft",
-        colors: ["#A8E6CE", "#DCEDC2", "#FFD3B5", "#FFAAA6", "#FF8C94"],
-        roles: ["background", "primary", "secondary", "accent", "text"],
-      },
-    ];
-  }
 }

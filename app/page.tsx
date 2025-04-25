@@ -18,7 +18,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { generatePalettes, Palette } from "@/lib/palette-generator";
+import { Palette } from "@/lib/palette-generator";
+import {
+  getFallbackPalettes,
+  getMockPalettes,
+  usePaletteMutation,
+} from "@/lib/palette-queries";
 import { Github, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -29,9 +34,6 @@ const DEFAULT_DATA_SOURCE = "professional";
 
 export default function Home() {
   const [feeling, setFeeling] = useState(DEFAULT_DATA_SOURCE);
-  const [palettes, setPalettes] = useState<Palette[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [dataSource, setDataSource] =
     useState<DataSourceType>(DEFAULT_DATA_SOURCE);
   const [accessibilityStates, setAccessibilityStates] = useState<
@@ -40,25 +42,25 @@ export default function Home() {
   const [activePaletteIndex, setActivePaletteIndex] = useState<number | null>(
     null
   );
+  const [palettes, setPalettes] = useState<Palette[] | undefined>(undefined);
+
+  // Use React Query mutation for generating palettes
+  const {
+    mutate,
+    isPending: isGenerating,
+    isError,
+    error,
+  } = usePaletteMutation();
 
   // Load default palettes on component mount
   useEffect(() => {
-    setIsGenerating(true);
-    // For the initial load, we're using a preset
-    const isAI = DEFAULT_DATA_SOURCE === ("ai" as DataSourceType);
-    generatePalettes(DEFAULT_DATA_SOURCE, !isAI)
-      .then((generatedPalettes) => {
-        // Mock loading state for 1 second
-        setTimeout(() => {
-          setPalettes(generatedPalettes);
-          setIsGenerating(false);
-        }, 1000);
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-        setError("Failed to generate palettes. Please try again.");
-        setIsGenerating(false);
-      });
+    if (DEFAULT_DATA_SOURCE !== ("ai" as DataSourceType)) {
+      setFeeling(DEFAULT_DATA_SOURCE);
+      // For non-AI sources, use mock data
+      setPalettes(getMockPalettes(DEFAULT_DATA_SOURCE));
+    } else {
+      setFeeling(""); // Clear feeling for AI mode
+    }
   }, []);
 
   // Handle changing the data source
@@ -67,27 +69,12 @@ export default function Home() {
 
     if (value !== "ai") {
       setFeeling(value);
-
-      // Generate palettes immediately for mock data types
-      setIsGenerating(true);
-      generatePalettes(value, true) // true = use mock data
-        .then((generatedPalettes) => {
-          // Mock loading state for 1 second
-          setTimeout(() => {
-            setPalettes(generatedPalettes);
-            setIsGenerating(false);
-          }, 1000);
-        })
-        .catch((err) => {
-          console.error("Error:", err);
-          setTimeout(() => {
-            setError("Failed to generate palettes. Please try again.");
-            setIsGenerating(false);
-          }, 1000);
-        });
+      // For non-AI sources, use mock data
+      setPalettes(getMockPalettes(value));
     } else {
       // Clear the feeling when AI option is selected
       setFeeling("");
+      setPalettes(undefined);
     }
   };
 
@@ -95,36 +82,34 @@ export default function Home() {
     e.preventDefault();
     if (!feeling.trim()) return;
 
-    setIsGenerating(true);
-    setError(null);
-
-    try {
-      // When submitting form, use the AI API (useMockData = false)
-      const generatedPalettes = await generatePalettes(feeling, false);
-      setPalettes(generatedPalettes);
-    } catch (err) {
-      console.error("Error:", err);
-      setError("Failed to generate palettes. Please try again.");
-    } finally {
-      setIsGenerating(false);
+    if (dataSource === "ai") {
+      // Make API call for AI-generated palettes
+      mutate(feeling, {
+        onSuccess: (data) => {
+          setPalettes(data.palettes);
+        },
+        onError: () => {
+          // Use fallback palettes on error
+          setPalettes(getFallbackPalettes());
+        },
+      });
     }
   };
 
   const regeneratePalettes = async () => {
     if (!feeling.trim()) return;
 
-    setIsGenerating(true);
-    setError(null);
-
-    try {
-      // When regenerating, use the AI API (useMockData = false)
-      const generatedPalettes = await generatePalettes(feeling, false);
-      setPalettes(generatedPalettes);
-    } catch (err) {
-      console.error("Error:", err);
-      setError("Failed to generate palettes. Please try again.");
-    } finally {
-      setIsGenerating(false);
+    if (dataSource === "ai") {
+      // Make API call for AI-generated palettes
+      mutate(feeling, {
+        onSuccess: (data) => {
+          setPalettes(data.palettes);
+        },
+        onError: () => {
+          // Use fallback palettes on error
+          setPalettes(getFallbackPalettes());
+        },
+      });
     }
   };
 
@@ -198,7 +183,7 @@ export default function Home() {
 
           <form
             onSubmit={handleSubmit}
-            className="flex w-full max-w-lg mx-auto gap-2"
+            className="flex w-full max-w-lg mx-auto gap-4"
           >
             <Input
               placeholder="I'm feeling..."
@@ -215,9 +200,11 @@ export default function Home() {
             </Button>
           </form>
 
-          {error && (
+          {isError && (
             <div className="p-4 text-red-500 bg-red-50 dark:bg-red-950/20 rounded-lg">
-              {error}
+              {error instanceof Error
+                ? error.message
+                : "Failed to generate palettes. Please try again."}
             </div>
           )}
 
@@ -248,6 +235,7 @@ export default function Home() {
               </div>
             </div>
           ) : (
+            palettes &&
             palettes.length > 0 && (
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
