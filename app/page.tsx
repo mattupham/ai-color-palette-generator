@@ -6,14 +6,14 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { generatePalettes } from "@/lib/palette-generator";
+import { generatePalettes, Palette } from "@/lib/palette-generator";
 import { Copy, Github, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 export default function Home() {
   const [feeling, setFeeling] = useState("");
-  const [palettes, setPalettes] = useState<string[][]>([]);
+  const [palettes, setPalettes] = useState<Palette[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -151,11 +151,11 @@ export default function Home() {
                     <div key={index} className="space-y-2">
                       <div className="flex justify-between items-center mb-2">
                         <span className="text-sm font-medium">
-                          Palette {index + 1}
+                          {palette.name || `Palette ${index + 1}`}
                         </span>
                       </div>
                       <div className="flex h-24 w-full overflow-hidden rounded-lg">
-                        {palette.map((color, colorIndex) => (
+                        {palette.colors.map((color, colorIndex) => (
                           <div
                             key={colorIndex}
                             className="flex-1 relative group"
@@ -172,11 +172,18 @@ export default function Home() {
                                 <span className="sr-only">Copy color code</span>
                               </Button>
                             </div>
+                            {palette.roles && (
+                              <div className="absolute bottom-1 left-0 right-0 text-center text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span className="bg-black/60 text-white px-1 py-0.5 rounded">
+                                  {palette.roles[colorIndex]}
+                                </span>
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>
                       <div className="flex justify-between">
-                        {palette.map((color, colorIndex) => (
+                        {palette.colors.map((color, colorIndex) => (
                           <div key={colorIndex} className="text-xs font-mono">
                             {color}
                           </div>
