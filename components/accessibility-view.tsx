@@ -4,19 +4,20 @@ import { CopyButton } from "@/components/copy-button";
 import { Button } from "@/components/ui/button";
 import { analyzeContrast } from "@/lib/color-accessibility";
 import { Info } from "lucide-react";
-import { useState } from "react";
 
 interface AccessibilityViewProps {
   colors: string[];
   isPreview?: boolean;
+  showAccessibility: boolean;
+  onToggleAccessibility: () => void;
 }
 
 export function AccessibilityView({
   colors,
   isPreview = false,
+  showAccessibility,
+  onToggleAccessibility,
 }: AccessibilityViewProps) {
-  const [showAccessibility, setShowAccessibility] = useState(false);
-
   // Get best text colors (white or black) for each background color
   const colorPairs = colors.map((bgColor) => {
     // Analyze with white text
@@ -53,20 +54,8 @@ export function AccessibilityView({
 
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center mb-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setShowAccessibility(!showAccessibility)}
-          className="text-xs flex items-center gap-1 px-2 h-7"
-        >
-          <Info className="h-3.5 w-3.5" />
-          {showAccessibility ? "Hide Accessibility" : "Show Accessibility"}
-        </Button>
-      </div>
-
       <div
-        className={`grid grid-cols-1 gap-2 mt-2 overflow-hidden transition-all duration-500 ease-in-out ${
+        className={`grid grid-cols-1 gap-2 overflow-hidden transition-all duration-500 ease-in-out ${
           showAccessibility ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
@@ -132,5 +121,26 @@ export function AccessibilityView({
         </div>
       </div>
     </div>
+  );
+}
+
+// Helper component for accessibility toggle button
+export function AccessibilityToggle({
+  showAccessibility,
+  onToggleAccessibility,
+}: {
+  showAccessibility: boolean;
+  onToggleAccessibility: () => void;
+}) {
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={onToggleAccessibility}
+      className="text-xs flex items-center gap-1 px-2 h-7"
+    >
+      <Info className="h-3.5 w-3.5" />
+      {showAccessibility ? "Hide Accessibility" : "Show Accessibility"}
+    </Button>
   );
 }

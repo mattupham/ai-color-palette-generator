@@ -2,7 +2,10 @@
 
 import type React from "react";
 
-import { AccessibilityView } from "@/components/accessibility-view";
+import {
+  AccessibilityToggle,
+  AccessibilityView,
+} from "@/components/accessibility-view";
 import { CopyButton } from "@/components/copy-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -31,6 +34,12 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [dataSource, setDataSource] =
     useState<DataSourceType>(DEFAULT_DATA_SOURCE);
+  const [accessibilityStates, setAccessibilityStates] = useState<
+    Record<number, boolean>
+  >({});
+  const [activePaletteIndex, setActivePaletteIndex] = useState<number | null>(
+    null
+  );
 
   // Load default palettes on component mount
   useEffect(() => {
@@ -120,6 +129,17 @@ export default function Home() {
   };
 
   const isAIMode = dataSource === "ai";
+
+  const toggleAccessibility = (index: number) => {
+    const newState = !accessibilityStates[index];
+    setAccessibilityStates((prev) => ({
+      ...prev,
+      [index]: newState,
+    }));
+
+    // If showing accessibility, set this palette as active, otherwise set to null
+    setActivePaletteIndex(newState ? index : null);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -236,47 +256,69 @@ export default function Home() {
                 </div>
 
                 <div className="grid gap-6">
-                  {palettes.map((palette, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-medium">
-                          {palette.name || `Palette ${index + 1}`}
-                        </span>
-                      </div>
-                      <div className="flex h-24 w-full overflow-hidden rounded-lg">
-                        {palette.colors.map((color, colorIndex) => (
-                          <div
-                            key={colorIndex}
-                            className="flex-1 relative group cursor-pointer"
-                            style={{ backgroundColor: color }}
-                          >
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out bg-black/20">
-                              <CopyButton textToCopy={color} />
-                            </div>
-                            {palette.roles && (
-                              <div className="absolute bottom-1 left-0 right-0 text-center text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span className="bg-black/60 text-white px-1 py-0.5 rounded">
-                                  {palette.roles[colorIndex]}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                      <div className="grid grid-cols-5 gap-0 w-full">
-                        {palette.colors.map((color, colorIndex) => (
-                          <div
-                            key={colorIndex}
-                            className="text-xs font-mono text-center"
-                          >
-                            {color}
-                          </div>
-                        ))}
-                      </div>
+                  {palettes.map((palette, index) => {
+                    const isActive = activePaletteIndex === index;
+                    const shouldFade = activePaletteIndex !== null && !isActive;
 
-                      <AccessibilityView colors={palette.colors} />
-                    </div>
-                  ))}
+                    return (
+                      <div
+                        key={index}
+                        className={`space-y-2 transition-opacity duration-500 ${
+                          shouldFade ? "opacity-30" : "opacity-100"
+                        }`}
+                      >
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-medium">
+                            {palette.name || `Palette ${index + 1}`}
+                          </span>
+                          <AccessibilityToggle
+                            showAccessibility={!!accessibilityStates[index]}
+                            onToggleAccessibility={() =>
+                              toggleAccessibility(index)
+                            }
+                          />
+                        </div>
+                        <div className="flex h-24 w-full overflow-hidden rounded-lg">
+                          {palette.colors.map((color, colorIndex) => (
+                            <div
+                              key={colorIndex}
+                              className="flex-1 relative group cursor-pointer"
+                              style={{ backgroundColor: color }}
+                            >
+                              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out bg-black/20">
+                                <CopyButton textToCopy={color} />
+                              </div>
+                              {palette.roles && (
+                                <div className="absolute bottom-1 left-0 right-0 text-center text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                                  <span className="bg-black/60 text-white px-1 py-0.5 rounded">
+                                    {palette.roles[colorIndex]}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                        <div className="grid grid-cols-5 gap-0 w-full">
+                          {palette.colors.map((color, colorIndex) => (
+                            <div
+                              key={colorIndex}
+                              className="text-xs font-mono text-center"
+                            >
+                              {color}
+                            </div>
+                          ))}
+                        </div>
+
+                        <AccessibilityView
+                          colors={palette.colors}
+                          showAccessibility={!!accessibilityStates[index]}
+                          onToggleAccessibility={() =>
+                            toggleAccessibility(index)
+                          }
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )
