@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 
@@ -23,8 +24,9 @@ export function CopyButton({ textToCopy, className = "" }: CopyButtonProps) {
   };
 
   return (
-    <button
-      className={`h-8 w-8 rounded-full bg-white/90 text-black hover:bg-white flex items-center justify-center ${className} perspective`}
+    <Button
+      size="icon"
+      className={`rounded-full bg-white/90 text-black hover:bg-white ${className} perspective`}
       onClick={handleCopy}
       aria-label={copied ? "Copied!" : "Copy color code"}
       style={{ perspective: "1000px" }}
@@ -55,6 +57,6 @@ export function CopyButton({ textToCopy, className = "" }: CopyButtonProps) {
           <Check className="h-4 w-4" />
         </div>
       </div>
-    </button>
+    </Button>
   );
 }
