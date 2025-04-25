@@ -14,11 +14,11 @@ import Link from "next/link";
 const RECOMMENDED_FEELINGS = [
   "professional", // Uses mock data
   "summer", // Uses mock data
+  "autumn", // Uses mock data
   "happy",
   "calm",
   "creative",
   "peaceful",
-  "minimalist",
   "nostalgic",
 ];
 

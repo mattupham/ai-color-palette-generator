@@ -6,9 +6,6 @@ import {
 } from "@/lib/palette-queries";
 import { useEffect, useState } from "react";
 
-// Define special preset feelings that use mock data
-const PRESET_FEELINGS = ["professional", "summer"];
-
 export function usePaletteGenerator() {
   const [feeling, setFeeling] = useState("");
   const [inputValue, setInputValue] = useState("");
@@ -51,9 +48,12 @@ export function usePaletteGenerator() {
 
   // Core function to generate a palette based on feeling
   const generatePalette = (feelingText: string) => {
-    // Check if this is a preset feeling that uses mock data
-    if (PRESET_FEELINGS.includes(feelingText.toLowerCase())) {
-      setPalettes(getMockPalettes(feelingText.toLowerCase()));
+    // Try to get mock palettes first
+    const mockPalettes = getMockPalettes(feelingText.toLowerCase());
+
+    // If we have mock palettes, use them
+    if (mockPalettes && mockPalettes.length > 0) {
+      setPalettes(mockPalettes);
     } else {
       // Make API call for AI-generated palettes
       mutate(feelingText, {

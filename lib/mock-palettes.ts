@@ -108,33 +108,62 @@ const summerPalettes: Palette[] = [
   },
 ];
 
+// Mock palette data for "autumn" prompt
+const autumnPalettes: Palette[] = [
+  {
+    name: "Crisp Leaves",
+    colors: ["#4A2E29", "#7A4E4F", "#D19C8C", "#E8C9AB", "#F5F5F5"],
+    roles: ["background", "primary", "secondary", "accent", "text"],
+  },
+  {
+    name: "Golden Harvest",
+    colors: ["#563C22", "#8C6239", "#E7B365", "#FAE6C8", "#333333"],
+    roles: ["background", "primary", "secondary", "accent", "text"],
+  },
+  {
+    name: "Foggy Morning",
+    colors: ["#2B2F33", "#5A6A73", "#889595", "#DBE2E6", "#FFFFFF"],
+    roles: ["background", "primary", "secondary", "accent", "text"],
+  },
+  {
+    name: "Russet Woods",
+    colors: ["#3A2423", "#6C4C3F", "#A2704F", "#DFB593", "#FAFAFA"],
+    roles: ["background", "primary", "secondary", "accent", "text"],
+  },
+  {
+    name: "Pumpkin Spice",
+    colors: ["#4C2F27", "#805045", "#CC5A3A", "#F0DDC6", "#F5F5F5"],
+    roles: ["background", "primary", "secondary", "accent", "text"],
+  },
+  {
+    name: "Misty Forest",
+    colors: ["#333333", "#535A56", "#8D9B8E", "#CDD7D4", "#F5F5F5"],
+    roles: ["background", "primary", "secondary", "accent", "text"],
+  },
+  {
+    name: "Burnt Ochre",
+    colors: ["#3F1C18", "#794A31", "#C86C46", "#E5A576", "#FBFBFB"],
+    roles: ["background", "primary", "secondary", "accent", "text"],
+  },
+  {
+    name: "Maple Leaves",
+    colors: ["#442220", "#854438", "#D15F4D", "#FCA990", "#F8F9F9"],
+    roles: ["background", "primary", "secondary", "accent", "text"],
+  },
+];
+
 // Collection of all mock palettes by feeling
 const mockPalettesByFeeling: Record<string, Palette[]> = {
   professional: professionalPalettes,
   summer: summerPalettes,
-  // Default set for when no specific mock data exists for a feeling
-  default: [
-    {
-      name: "Default Warm",
-      colors: ["#F8B195", "#F67280", "#C06C84", "#6C5B7B", "#355C7D"],
-      roles: ["background", "primary", "secondary", "accent", "text"],
-    },
-    {
-      name: "Default Natural",
-      colors: ["#99B898", "#FECEAB", "#FF847C", "#E84A5F", "#2A363B"],
-      roles: ["background", "primary", "secondary", "accent", "text"],
-    },
-    {
-      name: "Default Soft",
-      colors: ["#A8E6CE", "#DCEDC2", "#FFD3B5", "#FFAAA6", "#FF8C94"],
-      roles: ["background", "primary", "secondary", "accent", "text"],
-    },
-  ],
+  autumn: autumnPalettes,
 };
 
 // Function to get mock palettes based on feeling
-export function getMockPalettes(feeling: string): Palette[] {
+export function getMockPalettes(feeling: string): Palette[] | null {
   const normalizedFeeling = feeling.toLowerCase().trim();
+
+  console.log("normalizedFeeling", normalizedFeeling);
 
   // Check for exact match first
   if (mockPalettesByFeeling[normalizedFeeling]) {
@@ -148,6 +177,6 @@ export function getMockPalettes(feeling: string): Palette[] {
     }
   }
 
-  // If no match found, return default
-  return mockPalettesByFeeling.default;
+  // If no match found, return null
+  return null;
 }
