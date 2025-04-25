@@ -8,9 +8,13 @@ import { useState } from "react";
 
 interface AccessibilityViewProps {
   colors: string[];
+  isPreview?: boolean;
 }
 
-export function AccessibilityView({ colors }: AccessibilityViewProps) {
+export function AccessibilityView({
+  colors,
+  isPreview = false,
+}: AccessibilityViewProps) {
   const [showAccessibility, setShowAccessibility] = useState(false);
 
   // Get best text colors (white or black) for each background color
@@ -47,26 +51,6 @@ export function AccessibilityView({ colors }: AccessibilityViewProps) {
   const passedAAA = colorPairs.filter((pair) => pair.level === "AAA").length;
   const totalPairs = colorPairs.length;
 
-  const score = Math.round((passedAA / totalPairs) * 100);
-
-  // Determine the overall accessibility level
-  let accessibilityLevel = "Fail";
-  let levelColor = "bg-red-500 text-white";
-
-  if (passedAAA === totalPairs) {
-    accessibilityLevel = "AAA";
-    levelColor = "bg-green-500 text-white";
-  } else if (passedAA === totalPairs) {
-    accessibilityLevel = "AA";
-    levelColor = "bg-yellow-500 text-black";
-  } else if (score >= 80) {
-    accessibilityLevel = "AA*";
-    levelColor = "bg-yellow-500 text-black";
-  } else if (score >= 50) {
-    accessibilityLevel = "A*";
-    levelColor = "bg-orange-500 text-white";
-  }
-
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-2">
@@ -79,13 +63,6 @@ export function AccessibilityView({ colors }: AccessibilityViewProps) {
           <Info className="h-3.5 w-3.5" />
           {showAccessibility ? "Hide Accessibility" : "Show Accessibility"}
         </Button>
-
-        {/* Always visible accessibility summary */}
-        <div className="flex items-center gap-2 text-xs">
-          <span className={`px-1.5 py-0.5 rounded ${levelColor}`}>
-            {accessibilityLevel}
-          </span>
-        </div>
       </div>
 
       {showAccessibility && (
