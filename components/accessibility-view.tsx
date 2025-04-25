@@ -53,14 +53,12 @@ export function AccessibilityView({ colors }: AccessibilityViewProps) {
   let accessibilityLevel = "Fail";
   let levelColor = "bg-red-500 text-white";
 
-  if (score === 100) {
-    if (passedAAA === totalPairs) {
-      accessibilityLevel = "AAA";
-      levelColor = "bg-green-500 text-white";
-    } else {
-      accessibilityLevel = "AA";
-      levelColor = "bg-yellow-500 text-black";
-    }
+  if (passedAAA === totalPairs) {
+    accessibilityLevel = "AAA";
+    levelColor = "bg-green-500 text-white";
+  } else if (passedAA === totalPairs) {
+    accessibilityLevel = "AA";
+    levelColor = "bg-yellow-500 text-black";
   } else if (score >= 80) {
     accessibilityLevel = "AA*";
     levelColor = "bg-yellow-500 text-black";
@@ -86,17 +84,6 @@ export function AccessibilityView({ colors }: AccessibilityViewProps) {
         <div className="flex items-center gap-2 text-xs">
           <span className={`px-1.5 py-0.5 rounded ${levelColor}`}>
             {accessibilityLevel}
-          </span>
-          <span
-            className={`font-medium ${
-              score >= 80
-                ? "text-green-500"
-                : score >= 60
-                ? "text-yellow-500"
-                : "text-red-500"
-            }`}
-          >
-            {score}%
           </span>
         </div>
       </div>
