@@ -113,16 +113,17 @@ export default function Home() {
               </div>
 
               <div className="grid gap-6">
-                {[1, 2, 3].map((_, index) => (
+                {[...Array(10)].map((_, index) => (
                   <div key={index} className="space-y-2">
-                    <div className="flex h-24 w-full overflow-hidden rounded-lg">
-                      {[1, 2, 3, 4, 5].map((_, colorIndex) => (
-                        <Skeleton key={colorIndex} className="flex-1 h-full" />
-                      ))}
+                    <div className="flex justify-between items-center mb-2">
+                      <Skeleton className="h-5 w-24" />
                     </div>
+                    <Skeleton className="h-24 w-full rounded-lg" />
                     <div className="flex justify-between">
                       {[1, 2, 3, 4, 5].map((_, colorIndex) => (
-                        <Skeleton key={colorIndex} className="h-4 w-16" />
+                        <div key={colorIndex} className="text-xs font-mono">
+                          <Skeleton className="h-4 w-16" />
+                        </div>
                       ))}
                     </div>
                   </div>
