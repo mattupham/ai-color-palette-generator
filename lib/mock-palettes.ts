@@ -1,7 +1,7 @@
 import { Palette } from "./palette-generator";
 
 // Mock palette data for "professional" prompt
-export const professionalPalettes: Palette[] = [
+const professionalPalettes: Palette[] = [
   {
     name: "Corporate Calm",
     colors: ["#f5f5f5", "#085f73", "#0e9396", "#94e0d0", "#081219"],
@@ -55,7 +55,7 @@ export const professionalPalettes: Palette[] = [
 ];
 
 // Mock palette data for "summer" prompt
-export const summerPalettes: Palette[] = [
+const summerPalettes: Palette[] = [
   {
     name: "Sunny Beach",
     colors: ["#f5f5f5", "#ff6540", "#fde88c", "#24c4a7", "#333333"],
@@ -109,7 +109,7 @@ export const summerPalettes: Palette[] = [
 ];
 
 // Collection of all mock palettes by feeling
-export const mockPalettesByFeeling: Record<string, Palette[]> = {
+const mockPalettesByFeeling: Record<string, Palette[]> = {
   professional: professionalPalettes,
   summer: summerPalettes,
   // Default set for when no specific mock data exists for a feeling

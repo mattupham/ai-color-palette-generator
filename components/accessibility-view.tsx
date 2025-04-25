@@ -155,7 +155,7 @@ export function AccessibilityToggle({
 }
 
 // Helper component to show if a palette passes accessibility standards
-export function AccessibilityCheck({ colors }: { colors: string[] }) {
+function AccessibilityCheck({ colors }: { colors: string[] }) {
   // Get best text colors (white or black) for each background color
   const colorPairs = colors.map((bgColor) => {
     // Analyze with white text

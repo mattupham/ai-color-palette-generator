@@ -215,7 +215,7 @@ export interface Palette {
   roles?: string[];
 }
 
-export interface PaletteResponse {
+interface PaletteResponse {
   palettes: Palette[];
   feeling: string;
 }

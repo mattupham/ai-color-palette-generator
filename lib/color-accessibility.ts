@@ -55,7 +55,7 @@ function calculateRelativeLuminance(color: string): number {
  * Calculate contrast ratio between two colors
  * Formula from WCAG 2.0: https://www.w3.org/TR/WCAG20/#contrast-ratiodef
  */
-export function calculateContrastRatio(color1: string, color2: string): number {
+function calculateContrastRatio(color1: string, color2: string): number {
   const luminance1 = calculateRelativeLuminance(color1);
   const luminance2 = calculateRelativeLuminance(color2);
 
@@ -68,7 +68,7 @@ export function calculateContrastRatio(color1: string, color2: string): number {
 /**
  * Determines WCAG compliance level for contrast ratio
  */
-export function getWCAGLevel(
+function getWCAGLevel(
   contrastRatio: number,
   isLargeText: boolean = false
 ): "Fail" | "A" | "AA" | "AAA" {
@@ -89,7 +89,7 @@ export function getWCAGLevel(
 /**
  * Determines if text color should be white or black based on background color
  */
-export function getTextColor(backgroundColor: string): "white" | "black" {
+function getTextColor(backgroundColor: string): "white" | "black" {
   const luminance = calculateRelativeLuminance(backgroundColor);
   return luminance > 0.5 ? "black" : "white";
 }
@@ -97,7 +97,7 @@ export function getTextColor(backgroundColor: string): "white" | "black" {
 /**
  * Interface for color contrast analysis result
  */
-export interface ContrastAnalysisResult {
+interface ContrastAnalysisResult {
   foregroundColor: string;
   backgroundColor: string;
   contrastRatio: number;
@@ -134,7 +134,7 @@ export function analyzeContrast(
 /**
  * Analyze all possible text/background color combinations in a palette
  */
-export function analyzePaletteContrast(
+function analyzePaletteContrast(
   colors: string[]
 ): ContrastAnalysisResult[] {
   const results: ContrastAnalysisResult[] = [];
@@ -156,7 +156,7 @@ export function analyzePaletteContrast(
  * Get accessible text/background color pairs from a palette
  * Returns pairs that meet at least AA standard
  */
-export function getAccessibleColorPairs(
+function getAccessibleColorPairs(
   colors: string[]
 ): {
   text: string;
