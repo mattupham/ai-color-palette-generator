@@ -1,9 +1,10 @@
 "use client";
 
 import { CopyButton } from "@/components/copy-button";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { analyzeContrast } from "@/lib/color-accessibility";
-import { Info } from "lucide-react";
+import { CheckCircle2, Info, XCircle } from "lucide-react";
 
 interface AccessibilityViewProps {
   colors: string[];
@@ -59,6 +60,10 @@ export function AccessibilityView({
           showAccessibility ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
+        <div className="mt-2 mb-1">
+          <AccessibilityCheck colors={colors} />
+        </div>
+
         {colorPairs.map((pair, index) => (
           <div
             key={index}
@@ -137,10 +142,73 @@ export function AccessibilityToggle({
       variant="ghost"
       size="sm"
       onClick={onToggleAccessibility}
-      className="text-xs flex items-center gap-1 px-2 h-7"
+      className="text-xs flex items-center gap-1 px-2 h-7 min-w-[140px] justify-center"
     >
       <Info className="h-3.5 w-3.5" />
       {showAccessibility ? "Hide Accessibility" : "Show Accessibility"}
     </Button>
+  );
+}
+
+// Helper component to show if a palette passes accessibility standards
+export function AccessibilityCheck({ colors }: { colors: string[] }) {
+  // Get best text colors (white or black) for each background color
+  const colorPairs = colors.map((bgColor) => {
+    // Analyze with white text
+    const whiteTextAnalysis = analyzeContrast("#FFFFFF", bgColor);
+    // Analyze with black text
+    const blackTextAnalysis = analyzeContrast("#000000", bgColor);
+
+    // Return the better contrast option
+    return whiteTextAnalysis.contrastRatio > blackTextAnalysis.contrastRatio
+      ? {
+          backgroundColor: bgColor,
+          contrastRatio: whiteTextAnalysis.contrastRatio,
+          level: whiteTextAnalysis.level,
+        }
+      : {
+          backgroundColor: bgColor,
+          contrastRatio: blackTextAnalysis.contrastRatio,
+          level: blackTextAnalysis.level,
+        };
+  });
+
+  // Check different accessibility levels
+  const passedAA = colorPairs.filter(
+    (pair) => pair.level === "AA" || pair.level === "AAA"
+  ).length;
+  const passedAAA = colorPairs.filter((pair) => pair.level === "AAA").length;
+  const totalPairs = colorPairs.length;
+
+  // Determine the overall level
+  let level = "";
+  let badgeStyle = "";
+
+  if (passedAAA === totalPairs) {
+    level = "WCAG AAA";
+    badgeStyle = "bg-green-500/10 text-green-600 dark:text-green-400";
+  } else if (passedAA === totalPairs) {
+    level = "WCAG AA";
+    badgeStyle = "bg-green-300/10 text-green-500 dark:text-green-300";
+  } else if (passedAA > 0) {
+    level = "Partial AA";
+    badgeStyle = "bg-orange-500/10 text-orange-600 dark:text-orange-400";
+  } else {
+    level = "Fails WCAG";
+    badgeStyle = "bg-red-500/10 text-red-600 dark:text-red-400";
+  }
+
+  const icon =
+    passedAA === totalPairs ? (
+      <CheckCircle2 className="h-3 w-3" />
+    ) : (
+      <XCircle className="h-3 w-3" />
+    );
+
+  return (
+    <Badge variant="outline" className={`${badgeStyle} gap-1`}>
+      {icon}
+      <span>{level}</span>
+    </Badge>
   );
 }

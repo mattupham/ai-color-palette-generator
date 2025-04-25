@@ -131,11 +131,19 @@ export default function Home() {
   const isAIMode = dataSource === "ai";
 
   const toggleAccessibility = (index: number) => {
-    const newState = !accessibilityStates[index];
-    setAccessibilityStates((prev) => ({
-      ...prev,
-      [index]: newState,
-    }));
+    const isCurrentlyOpen = !!accessibilityStates[index];
+    const newState = !isCurrentlyOpen;
+
+    // Create a new state object with all dropdowns closed
+    const newAccessibilityStates: Record<number, boolean> = {};
+
+    // If we're opening this dropdown, set only this one to true
+    // If we're closing this dropdown, keep all closed
+    if (newState) {
+      newAccessibilityStates[index] = true;
+    }
+
+    setAccessibilityStates(newAccessibilityStates);
 
     // If showing accessibility, set this palette as active, otherwise set to null
     setActivePaletteIndex(newState ? index : null);
@@ -263,20 +271,24 @@ export default function Home() {
                     return (
                       <div
                         key={index}
-                        className={`space-y-2 transition-opacity duration-500 ${
-                          shouldFade ? "opacity-30" : "opacity-100"
+                        className={`space-y-2 transition-all duration-500 ${
+                          shouldFade
+                            ? "opacity-20 pointer-events-none"
+                            : "opacity-100"
                         }`}
                       >
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-sm font-medium">
                             {palette.name || `Palette ${index + 1}`}
                           </span>
-                          <AccessibilityToggle
-                            showAccessibility={!!accessibilityStates[index]}
-                            onToggleAccessibility={() =>
-                              toggleAccessibility(index)
-                            }
-                          />
+                          <div className="flex items-center gap-2">
+                            <AccessibilityToggle
+                              showAccessibility={!!accessibilityStates[index]}
+                              onToggleAccessibility={() =>
+                                toggleAccessibility(index)
+                              }
+                            />
+                          </div>
                         </div>
                         <div className="flex h-24 w-full overflow-hidden rounded-lg">
                           {palette.colors.map((color, colorIndex) => (
