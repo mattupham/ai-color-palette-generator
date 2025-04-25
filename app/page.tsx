@@ -151,7 +151,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="border-b">
+      <header className="border-b fixed top-0 left-0 right-0 z-10 bg-background">
         <div className="container flex h-14 items-center justify-between">
           <Link
             href="https://github.com/mattupham"
@@ -185,7 +185,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex flex-col items-center px-4 py-8 sm:px-8 sm:py-12 md:px-16 md:py-16 lg:px-24 lg:py-24">
+      <main className="flex flex-col items-center p-16 md:p-24 mt-14">
         <div className="w-full max-w-3xl space-y-8">
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold tracking-tighter md:text-4xl lg:text-6xl">
