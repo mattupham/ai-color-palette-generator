@@ -1,138 +1,44 @@
 "use client";
 
-import type React from "react";
-
-import {
-  AccessibilityToggle,
-  AccessibilityView,
-} from "@/components/accessibility-view";
-import { CopyButton } from "@/components/copy-button";
+import { LoadingSkeletons } from "@/components/LoadingSkeletons";
+import { PaletteDisplay } from "@/components/PaletteDisplay";
+import { PaletteForm } from "@/components/PaletteForm";
+import { RecommendedFeelings } from "@/components/RecommendedFeelings";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Palette } from "@/lib/palette-generator";
-import {
-  getFallbackPalettes,
-  getMockPalettes,
-  usePaletteMutation,
-} from "@/lib/palette-queries";
-import { Github, RefreshCw } from "lucide-react";
+import { useAccessibilityToggle } from "@/hooks/useAccessibilityToggle";
+import { usePaletteGenerator } from "@/hooks/usePaletteGenerator";
+import { Github } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
-type DataSourceType = "ai" | "professional" | "summer";
-
-const DEFAULT_DATA_SOURCE = "professional";
+// Recommended feelings for quick selection
+const RECOMMENDED_FEELINGS = [
+  "professional", // Uses mock data
+  "summer", // Uses mock data
+  "happy",
+  "calm",
+  "creative",
+  "peaceful",
+  "minimalist",
+  "nostalgic",
+];
 
 export default function Home() {
-  const [feeling, setFeeling] = useState(DEFAULT_DATA_SOURCE);
-  const [dataSource, setDataSource] =
-    useState<DataSourceType>(DEFAULT_DATA_SOURCE);
-  const [accessibilityStates, setAccessibilityStates] = useState<
-    Record<number, boolean>
-  >({});
-  const [activePaletteIndex, setActivePaletteIndex] = useState<number | null>(
-    null
-  );
-  const [palettes, setPalettes] = useState<Palette[] | undefined>(undefined);
-
-  // Use React Query mutation for generating palettes
+  // Hook for palette generation
   const {
-    mutate,
-    isPending: isGenerating,
+    inputValue,
+    setInputValue,
+    palettes,
+    isGenerating,
     isError,
     error,
-  } = usePaletteMutation();
+    handleSubmit,
+    regeneratePalettes,
+    handleRecommendedFeelingClick,
+  } = usePaletteGenerator();
 
-  // Load default palettes on component mount
-  useEffect(() => {
-    if (DEFAULT_DATA_SOURCE !== ("ai" as DataSourceType)) {
-      setFeeling(DEFAULT_DATA_SOURCE);
-      // For non-AI sources, use mock data
-      setPalettes(getMockPalettes(DEFAULT_DATA_SOURCE));
-    } else {
-      setFeeling(""); // Clear feeling for AI mode
-    }
-  }, []);
-
-  // Handle changing the data source
-  const handleDataSourceChange = (value: DataSourceType) => {
-    setDataSource(value);
-
-    if (value !== "ai") {
-      setFeeling(value);
-      // For non-AI sources, use mock data
-      setPalettes(getMockPalettes(value));
-    } else {
-      // Clear the feeling when AI option is selected
-      setFeeling("");
-      setPalettes(undefined);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!feeling.trim()) return;
-
-    if (dataSource === "ai") {
-      // Make API call for AI-generated palettes
-      mutate(feeling, {
-        onSuccess: (data) => {
-          setPalettes(data.palettes);
-        },
-        onError: () => {
-          // Use fallback palettes on error
-          setPalettes(getFallbackPalettes());
-        },
-      });
-    }
-  };
-
-  const regeneratePalettes = async () => {
-    if (!feeling.trim()) return;
-
-    if (dataSource === "ai") {
-      // Make API call for AI-generated palettes
-      mutate(feeling, {
-        onSuccess: (data) => {
-          setPalettes(data.palettes);
-        },
-        onError: () => {
-          // Use fallback palettes on error
-          setPalettes(getFallbackPalettes());
-        },
-      });
-    }
-  };
-
-  const isAIMode = dataSource === "ai";
-
-  const toggleAccessibility = (index: number) => {
-    const isCurrentlyOpen = !!accessibilityStates[index];
-    const newState = !isCurrentlyOpen;
-
-    // Create a new state object with all dropdowns closed
-    const newAccessibilityStates: Record<number, boolean> = {};
-
-    // If we're opening this dropdown, set only this one to true
-    // If we're closing this dropdown, keep all closed
-    if (newState) {
-      newAccessibilityStates[index] = true;
-    }
-
-    setAccessibilityStates(newAccessibilityStates);
-
-    // If showing accessibility, set this palette as active, otherwise set to null
-    setActivePaletteIndex(newState ? index : null);
-  };
+  // Hook for accessibility toggles
+  const { accessibilityStates, activePaletteIndex, toggleAccessibility } =
+    useAccessibilityToggle();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -147,24 +53,6 @@ export default function Home() {
             <span className="sr-only">GitHub</span>
           </Link>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Select value={dataSource} onValueChange={handleDataSourceChange}>
-                <SelectTrigger className="h-8 w-[180px]">
-                  <SelectValue>
-                    {dataSource === "ai"
-                      ? "AI Generated"
-                      : dataSource === "professional"
-                      ? "Professional"
-                      : "Summer"}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="ai">AI Generated</SelectItem>
-                  <SelectItem value="professional">Professional</SelectItem>
-                  <SelectItem value="summer">Summer</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
             <ThemeToggle />
           </div>
         </div>
@@ -181,25 +69,23 @@ export default function Home() {
             </p>
           </div>
 
-          <form
+          {/* Form for entering feeling */}
+          <PaletteForm
+            inputValue={inputValue}
+            setInputValue={setInputValue}
             onSubmit={handleSubmit}
-            className="flex w-full max-w-lg mx-auto gap-4"
-          >
-            <Input
-              placeholder="I'm feeling..."
-              value={feeling}
-              onChange={(e) => setFeeling(e.target.value)}
-              className="flex-1"
-              disabled={!isAIMode}
-            />
-            <Button
-              type="submit"
-              disabled={isGenerating || !feeling.trim() || !isAIMode}
-            >
-              {isGenerating ? "Generating..." : "Generate"}
-            </Button>
-          </form>
+            isGenerating={isGenerating}
+          />
 
+          {/* Recommended feelings */}
+          {!inputValue.trim() && (
+            <RecommendedFeelings
+              feelings={RECOMMENDED_FEELINGS}
+              onFeelingClick={handleRecommendedFeelingClick}
+            />
+          )}
+
+          {/* Error message */}
           {isError && (
             <div className="p-4 text-red-500 bg-red-50 dark:bg-red-950/20 rounded-lg">
               {error instanceof Error
@@ -208,120 +94,18 @@ export default function Home() {
             </div>
           )}
 
+          {/* Loading state or palette display */}
           {isGenerating ? (
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-semibold">
-                  Generating Palettes...
-                </h2>
-              </div>
-
-              <div className="grid gap-6">
-                {[...Array(10)].map((_, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between items-center mb-2">
-                      <Skeleton className="h-5 w-24" />
-                    </div>
-                    <Skeleton className="h-24 w-full rounded-lg" />
-                    <div className="flex justify-between">
-                      {[1, 2, 3, 4, 5].map((_, colorIndex) => (
-                        <div key={colorIndex} className="text-xs font-mono">
-                          <Skeleton className="h-4 w-16" />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <LoadingSkeletons />
           ) : (
-            palettes &&
-            palettes.length > 0 && (
-              <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <h2 className="text-2xl font-semibold">Your Palettes</h2>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={regeneratePalettes}
-                    disabled={isGenerating || !isAIMode}
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Refresh
-                  </Button>
-                </div>
-
-                <div className="grid gap-6">
-                  {palettes.map((palette, index) => {
-                    const isActive = activePaletteIndex === index;
-                    const shouldFade = activePaletteIndex !== null && !isActive;
-
-                    return (
-                      <div
-                        key={index}
-                        className={`space-y-2 transition-all duration-500 ${
-                          shouldFade
-                            ? "opacity-20 pointer-events-none"
-                            : "opacity-100"
-                        }`}
-                      >
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium">
-                            {palette.name || `Palette ${index + 1}`}
-                          </span>
-                          <div className="flex items-center gap-2">
-                            <AccessibilityToggle
-                              showAccessibility={!!accessibilityStates[index]}
-                              onToggleAccessibility={() =>
-                                toggleAccessibility(index)
-                              }
-                            />
-                          </div>
-                        </div>
-                        <div className="flex h-24 w-full overflow-hidden rounded-lg">
-                          {palette.colors.map((color, colorIndex) => (
-                            <div
-                              key={colorIndex}
-                              className="flex-1 relative group cursor-pointer"
-                              style={{ backgroundColor: color }}
-                            >
-                              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out bg-black/20">
-                                <CopyButton textToCopy={color} />
-                              </div>
-                              {palette.roles && (
-                                <div className="absolute bottom-1 left-0 right-0 text-center text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                                  <span className="bg-black/60 text-white px-1 py-0.5 rounded">
-                                    {palette.roles[colorIndex]}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                        <div className="grid grid-cols-5 gap-0 w-full">
-                          {palette.colors.map((color, colorIndex) => (
-                            <div
-                              key={colorIndex}
-                              className="text-xs font-mono text-center"
-                            >
-                              {color}
-                            </div>
-                          ))}
-                        </div>
-
-                        <AccessibilityView
-                          colors={palette.colors}
-                          showAccessibility={!!accessibilityStates[index]}
-                          onToggleAccessibility={() =>
-                            toggleAccessibility(index)
-                          }
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )
+            <PaletteDisplay
+              palettes={palettes || []}
+              isGenerating={isGenerating}
+              onRefresh={regeneratePalettes}
+              accessibilityStates={accessibilityStates}
+              onToggleAccessibility={toggleAccessibility}
+              activePaletteIndex={activePaletteIndex}
+            />
           )}
         </div>
       </main>
