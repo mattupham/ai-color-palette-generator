@@ -10,7 +10,6 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Color Palette Generator",
   description: "Generate color palettes based on your feelings",
-  generator: "v0.dev",
 };
 
 export default function RootLayout({

@@ -23,7 +23,6 @@ const RECOMMENDED_FEELINGS = [
 ];
 
 export default function Home() {
-  // Hook for palette generation
   const {
     inputValue,
     setInputValue,
@@ -36,7 +35,6 @@ export default function Home() {
     handleRecommendedFeelingClick,
   } = usePaletteGenerator();
 
-  // Hook for accessibility toggles
   const { accessibilityStates, activePaletteIndex, toggleAccessibility } =
     useAccessibilityToggle();
 

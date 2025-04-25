@@ -10,8 +10,6 @@ export async function POST(request: Request) {
   try {
     const { feeling } = await request.json();
 
-    console.log("Feeling:", feeling);
-
     if (!feeling || typeof feeling !== "string") {
       return NextResponse.json(
         { error: "Feeling is required and must be a string" },
