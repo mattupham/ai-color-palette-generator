@@ -2,12 +2,13 @@
 
 import type React from "react";
 
+import { CopyButton } from "@/components/copy-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { generatePalettes, Palette } from "@/lib/palette-generator";
-import { Copy, Github, RefreshCw } from "lucide-react";
+import { Github, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -52,10 +53,6 @@ export default function Home() {
     }
   };
 
-  const copyToClipboard = (colorCode: string) => {
-    navigator.clipboard.writeText(colorCode);
-  };
-
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b">
@@ -72,13 +69,13 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex flex-col items-center p-4 md:p-24">
+      <main className="flex flex-col items-center p-16 md:p-24">
         <div className="w-full max-w-3xl space-y-8">
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+            <h1 className="text-3xl font-bold tracking-tighter md:text-4xl lg:text-6xl">
               Color Palette Generator
             </h1>
-            <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            <p className="text-base text-muted-foreground md:text-lg lg:text-2xl">
               Type how you're feeling and get beautiful color palettes
             </p>
           </div>
@@ -153,24 +150,25 @@ export default function Home() {
                         <span className="text-sm font-medium">
                           {palette.name || `Palette ${index + 1}`}
                         </span>
+                        <Link
+                          href={`/preview?colors=${encodeURIComponent(
+                            JSON.stringify(palette)
+                          )}`}
+                          className="text-xs text-primary hover:underline"
+                          target="_blank"
+                        >
+                          Preview
+                        </Link>
                       </div>
                       <div className="flex h-24 w-full overflow-hidden rounded-lg">
                         {palette.colors.map((color, colorIndex) => (
                           <div
                             key={colorIndex}
-                            className="flex-1 relative group"
+                            className="flex-1 relative group cursor-pointer"
                             style={{ backgroundColor: color }}
                           >
-                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => copyToClipboard(color)}
-                                className="h-8 w-8 rounded-full bg-white/90 text-black hover:bg-white"
-                              >
-                                <Copy className="h-4 w-4" />
-                                <span className="sr-only">Copy color code</span>
-                              </Button>
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in-out bg-black/20">
+                              <CopyButton textToCopy={color} />
                             </div>
                             {palette.roles && (
                               <div className="absolute bottom-1 left-0 right-0 text-center text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
