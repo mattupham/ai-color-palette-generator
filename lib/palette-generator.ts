@@ -1,3 +1,6 @@
+// Add import of mock data module at the top of the file
+import { getMockPalettes } from "./mock-palettes";
+
 // Mapping of feelings to base colors (in HSL format for easier manipulation)
 const feelingColorMap: Record<
   string,
@@ -218,13 +221,24 @@ export interface PaletteResponse {
 }
 
 // Function to generate palettes using the OpenAI API
-export async function generatePalettes(feeling: string): Promise<Palette[]> {
+export async function generatePalettes(
+  feeling: string,
+  useMockData: boolean
+): Promise<Palette[]> {
+  if (useMockData) {
+    console.log("Using mock data for feeling:", feeling);
+    // Return mock palettes based on feeling
+    return getMockPalettes(feeling);
+  }
+
+  // Continue with the real API call if mock data is not enabled
   try {
     const response = await fetch("/api/generate-palettes", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      // Now we pass the actual feeling entered by the user
       body: JSON.stringify({ feeling }),
     });
 

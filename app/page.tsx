@@ -7,17 +7,80 @@ import { CopyButton } from "@/components/copy-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { generatePalettes, Palette } from "@/lib/palette-generator";
 import { Github, RefreshCw } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+type DataSourceType = "ai" | "professional" | "summer";
+
+const DEFAULT_DATA_SOURCE = "professional";
 
 export default function Home() {
-  const [feeling, setFeeling] = useState("");
+  const [feeling, setFeeling] = useState(DEFAULT_DATA_SOURCE);
   const [palettes, setPalettes] = useState<Palette[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [dataSource, setDataSource] =
+    useState<DataSourceType>(DEFAULT_DATA_SOURCE);
+
+  // Load default palettes on component mount
+  useEffect(() => {
+    setIsGenerating(true);
+    // For the initial load, we're using a preset
+    const isAI = DEFAULT_DATA_SOURCE === ("ai" as DataSourceType);
+    generatePalettes(DEFAULT_DATA_SOURCE, !isAI)
+      .then((generatedPalettes) => {
+        // Mock loading state for 1 second
+        setTimeout(() => {
+          setPalettes(generatedPalettes);
+          setIsGenerating(false);
+        }, 1000);
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        setError("Failed to generate palettes. Please try again.");
+        setIsGenerating(false);
+      });
+  }, []);
+
+  // Handle changing the data source
+  const handleDataSourceChange = (value: DataSourceType) => {
+    setDataSource(value);
+
+    if (value !== "ai") {
+      setFeeling(value);
+
+      // Generate palettes immediately for mock data types
+      setIsGenerating(true);
+      generatePalettes(value, true) // true = use mock data
+        .then((generatedPalettes) => {
+          // Mock loading state for 1 second
+          setTimeout(() => {
+            setPalettes(generatedPalettes);
+            setIsGenerating(false);
+          }, 1000);
+        })
+        .catch((err) => {
+          console.error("Error:", err);
+          setTimeout(() => {
+            setError("Failed to generate palettes. Please try again.");
+            setIsGenerating(false);
+          }, 1000);
+        });
+    } else {
+      // Clear the feeling when AI option is selected
+      setFeeling("");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +90,8 @@ export default function Home() {
     setError(null);
 
     try {
-      const generatedPalettes = await generatePalettes(feeling);
+      // When submitting form, use the AI API (useMockData = false)
+      const generatedPalettes = await generatePalettes(feeling, false);
       setPalettes(generatedPalettes);
     } catch (err) {
       console.error("Error:", err);
@@ -44,7 +108,8 @@ export default function Home() {
     setError(null);
 
     try {
-      const generatedPalettes = await generatePalettes(feeling);
+      // When regenerating, use the AI API (useMockData = false)
+      const generatedPalettes = await generatePalettes(feeling, false);
       setPalettes(generatedPalettes);
     } catch (err) {
       console.error("Error:", err);
@@ -53,6 +118,8 @@ export default function Home() {
       setIsGenerating(false);
     }
   };
+
+  const isAIMode = dataSource === "ai";
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -66,7 +133,27 @@ export default function Home() {
             <Github className="h-5 w-5" />
             <span className="sr-only">GitHub</span>
           </Link>
-          <ThemeToggle />
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Select value={dataSource} onValueChange={handleDataSourceChange}>
+                <SelectTrigger className="h-8 w-[180px]">
+                  <SelectValue>
+                    {dataSource === "ai"
+                      ? "AI Generated"
+                      : dataSource === "professional"
+                      ? "Professional"
+                      : "Summer"}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ai">AI Generated</SelectItem>
+                  <SelectItem value="professional">Professional</SelectItem>
+                  <SelectItem value="summer">Summer</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
@@ -90,8 +177,12 @@ export default function Home() {
               value={feeling}
               onChange={(e) => setFeeling(e.target.value)}
               className="flex-1"
+              disabled={!isAIMode}
             />
-            <Button type="submit" disabled={isGenerating || !feeling.trim()}>
+            <Button
+              type="submit"
+              disabled={isGenerating || !feeling.trim() || !isAIMode}
+            >
               {isGenerating ? "Generating..." : "Generate"}
             </Button>
           </form>
@@ -137,7 +228,7 @@ export default function Home() {
                     variant="outline"
                     size="sm"
                     onClick={regeneratePalettes}
-                    disabled={isGenerating}
+                    disabled={isGenerating || !isAIMode}
                   >
                     <RefreshCw className="h-4 w-4 mr-2" />
                     Refresh
