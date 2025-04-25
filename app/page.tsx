@@ -1,67 +1,68 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Copy, RefreshCw } from "lucide-react"
-import { generatePalettes } from "@/lib/palette-generator"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { Skeleton } from "@/components/ui/skeleton"
-import { AccessibilityChecker } from "@/components/accessibility-checker"
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { generatePalettes } from "@/lib/palette-generator";
+import { Copy, RefreshCw } from "lucide-react";
+import { useState } from "react";
 
 export default function Home() {
-  const [feeling, setFeeling] = useState("")
-  const [palettes, setPalettes] = useState<string[][]>([])
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [feeling, setFeeling] = useState("");
+  const [palettes, setPalettes] = useState<string[][]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!feeling.trim()) return
+    e.preventDefault();
+    if (!feeling.trim()) return;
 
-    setIsGenerating(true)
-    setError(null)
+    setIsGenerating(true);
+    setError(null);
 
     try {
-      const generatedPalettes = await generatePalettes(feeling)
-      setPalettes(generatedPalettes)
+      const generatedPalettes = await generatePalettes(feeling);
+      setPalettes(generatedPalettes);
     } catch (err) {
-      console.error("Error:", err)
-      setError("Failed to generate palettes. Please try again.")
+      console.error("Error:", err);
+      setError("Failed to generate palettes. Please try again.");
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
-  }
+  };
 
   const regeneratePalettes = async () => {
-    if (!feeling.trim()) return
+    if (!feeling.trim()) return;
 
-    setIsGenerating(true)
-    setError(null)
+    setIsGenerating(true);
+    setError(null);
 
     try {
-      const generatedPalettes = await generatePalettes(feeling)
-      setPalettes(generatedPalettes)
+      const generatedPalettes = await generatePalettes(feeling);
+      setPalettes(generatedPalettes);
     } catch (err) {
-      console.error("Error:", err)
-      setError("Failed to generate palettes. Please try again.")
+      console.error("Error:", err);
+      setError("Failed to generate palettes. Please try again.");
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
-  }
+  };
 
   const copyToClipboard = (colorCode: string) => {
-    navigator.clipboard.writeText(colorCode)
-  }
+    navigator.clipboard.writeText(colorCode);
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:p-24 bg-background text-foreground">
       <div className="w-full max-w-3xl space-y-8">
         <div className="flex justify-between items-center">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Color Palette Generator</h1>
+            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+              Color Palette Generator
+            </h1>
             <p className="text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Type how you're feeling and get beautiful color palettes
             </p>
@@ -69,7 +70,10 @@ export default function Home() {
           <ThemeToggle />
         </div>
 
-        <form onSubmit={handleSubmit} className="flex w-full max-w-lg mx-auto gap-2">
+        <form
+          onSubmit={handleSubmit}
+          className="flex w-full max-w-lg mx-auto gap-2"
+        >
           <Input
             placeholder="I'm feeling..."
             value={feeling}
@@ -81,7 +85,11 @@ export default function Home() {
           </Button>
         </form>
 
-        {error && <div className="p-4 text-red-500 bg-red-50 dark:bg-red-950/20 rounded-lg">{error}</div>}
+        {error && (
+          <div className="p-4 text-red-500 bg-red-50 dark:bg-red-950/20 rounded-lg">
+            {error}
+          </div>
+        )}
 
         {isGenerating ? (
           <div className="space-y-6">
@@ -111,7 +119,12 @@ export default function Home() {
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-semibold">Your Palettes</h2>
-                <Button variant="outline" size="sm" onClick={regeneratePalettes} disabled={isGenerating}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={regeneratePalettes}
+                  disabled={isGenerating}
+                >
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Refresh
                 </Button>
@@ -121,12 +134,17 @@ export default function Home() {
                 {palettes.map((palette, index) => (
                   <div key={index} className="space-y-2">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium">Palette {index + 1}</span>
-                      <AccessibilityChecker palette={palette} />
+                      <span className="text-sm font-medium">
+                        Palette {index + 1}
+                      </span>
                     </div>
                     <div className="flex h-24 w-full overflow-hidden rounded-lg">
                       {palette.map((color, colorIndex) => (
-                        <div key={colorIndex} className="flex-1 relative group" style={{ backgroundColor: color }}>
+                        <div
+                          key={colorIndex}
+                          className="flex-1 relative group"
+                          style={{ backgroundColor: color }}
+                        >
                           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
                             <Button
                               variant="ghost"
@@ -156,5 +174,5 @@ export default function Home() {
         )}
       </div>
     </main>
-  )
+  );
 }
