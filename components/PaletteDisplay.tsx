@@ -4,6 +4,7 @@ import {
 } from "@/components/accessibility-view";
 import { CopyButton } from "@/components/copy-button";
 import { Palette } from "@/lib/palette-generator";
+import { useCallback, useEffect, useRef } from "react";
 
 interface PaletteDisplayProps {
   palettes: Palette[];
@@ -25,6 +26,63 @@ export function PaletteDisplay({
   onToggleAccessibility,
   activePaletteIndex,
 }: PaletteDisplayProps) {
+  // Create a stable ref object - MUST be before any conditional returns
+  const paletteRefs = useRef<Map<number, HTMLDivElement | null>>(new Map());
+
+  // Memoize the set ref callback - MUST be before any conditional returns
+  const setRef = useCallback(
+    (index: number) => (el: HTMLDivElement | null) => {
+      paletteRefs.current.set(index, el);
+    },
+    []
+  );
+
+  // Scroll active palette to center when accessibility is toggled - MUST be before any conditional returns
+  useEffect(() => {
+    if (activePaletteIndex === null) return;
+
+    // Create a separate function for the scrolling logic
+    const scrollToActive = () => {
+      const element = paletteRefs.current.get(activePaletteIndex);
+      if (!element) return;
+
+      // Get the element's position and dimensions
+      const rect = element.getBoundingClientRect();
+
+      // Account for the fixed header (approximately 56px)
+      const headerOffset = 56;
+
+      // Calculate the scroll position to center the element
+      // Add a small adjustment to better center the accessibility panel
+      const adjustment = 60; // Additional offset to center the accessibility details better
+      const windowHeight = window.innerHeight;
+      const elementHeight = rect.height;
+      const elementTop = window.scrollY + rect.top;
+
+      // Calculate the ideal position that centers both the palette and its details
+      const scrollPosition =
+        elementTop -
+        windowHeight / 2 +
+        elementHeight / 2 -
+        headerOffset +
+        adjustment;
+
+      // Scroll to the calculated position
+      window.scrollTo({
+        top: scrollPosition,
+        behavior: "smooth",
+      });
+    };
+
+    // Use requestAnimationFrame for better timing
+    const timerId = setTimeout(() => {
+      requestAnimationFrame(scrollToActive);
+    }, 125);
+
+    return () => clearTimeout(timerId);
+  }, [activePaletteIndex, accessibilityStates]);
+
+  // Early return AFTER all hooks are defined
   if (!palettes || palettes.length === 0) {
     return null;
   }
@@ -52,6 +110,7 @@ export function PaletteDisplay({
           return (
             <div
               key={index}
+              ref={setRef(index)}
               className={`space-y-2 transition-all duration-500 ${
                 shouldFade ? "opacity-20 pointer-events-none" : "opacity-100"
               }`}
