@@ -41,7 +41,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b fixed top-0 left-0 right-0 z-10 bg-background">
-        <div className="container flex h-14 items-center justify-between">
+        <div className="container mx-auto max-w-screen-2xl px-4 flex h-14 items-center justify-between">
           <Link
             href="https://github.com/mattupham"
             target="_blank"
