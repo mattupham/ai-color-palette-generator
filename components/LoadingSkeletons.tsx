@@ -4,7 +4,7 @@ interface LoadingSkeletonsProps {
   count?: number;
 }
 
-export function LoadingSkeletons({ count = 10 }: LoadingSkeletonsProps) {
+export function LoadingSkeletons({ count = 8 }: LoadingSkeletonsProps) {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
