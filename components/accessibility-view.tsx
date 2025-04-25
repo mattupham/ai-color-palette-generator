@@ -65,72 +65,72 @@ export function AccessibilityView({
         </Button>
       </div>
 
-      {showAccessibility && (
-        <div className="grid grid-cols-1 gap-2 mt-2">
-          {colorPairs.map((pair, index) => (
+      <div
+        className={`grid grid-cols-1 gap-2 mt-2 overflow-hidden transition-all duration-500 ease-in-out ${
+          showAccessibility ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        {colorPairs.map((pair, index) => (
+          <div
+            key={index}
+            className="flex items-center rounded-md overflow-hidden border"
+            style={{ backgroundColor: pair.backgroundColor }}
+          >
             <div
-              key={index}
-              className="flex items-center rounded-md overflow-hidden border"
-              style={{ backgroundColor: pair.backgroundColor }}
+              className="flex-1 py-2 px-3 font-medium text-sm flex items-center justify-between"
+              style={{ color: pair.textColor }}
             >
-              <div
-                className="flex-1 py-2 px-3 font-medium text-sm flex items-center justify-between"
-                style={{ color: pair.textColor }}
-              >
-                <span>{pair.isWhiteText ? "White Text" : "Black Text"}</span>
-                <div className="flex items-center gap-1">
-                  <span className="text-xs font-mono">
-                    {pair.formattedRatio}
+              <span>{pair.isWhiteText ? "White Text" : "Black Text"}</span>
+              <div className="flex items-center gap-1">
+                <span className="text-xs font-mono">{pair.formattedRatio}</span>
+                {pair.level === "AAA" && (
+                  <span className="bg-green-500 text-white text-xs px-1.5 py-0.5 rounded">
+                    AAA
                   </span>
-                  {pair.level === "AAA" && (
-                    <span className="bg-green-500 text-white text-xs px-1.5 py-0.5 rounded">
-                      AAA
-                    </span>
-                  )}
-                  {pair.level === "AA" && (
-                    <span className="bg-yellow-500 text-black text-xs px-1.5 py-0.5 rounded">
-                      AA
-                    </span>
-                  )}
-                  {pair.level === "A" && (
-                    <span className="bg-orange-500 text-white text-xs px-1.5 py-0.5 rounded">
-                      A
-                    </span>
-                  )}
-                  {pair.level === "Fail" && (
-                    <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded">
-                      Fail
-                    </span>
-                  )}
-                </div>
-              </div>
-              <div
-                className="p-2 flex items-center justify-center"
-                style={{ backgroundColor: pair.backgroundColor }}
-              >
-                <CopyButton
-                  textToCopy={pair.backgroundColor}
-                  className="bg-white/20 hover:bg-white/30"
-                />
+                )}
+                {pair.level === "AA" && (
+                  <span className="bg-yellow-500 text-black text-xs px-1.5 py-0.5 rounded">
+                    AA
+                  </span>
+                )}
+                {pair.level === "A" && (
+                  <span className="bg-orange-500 text-white text-xs px-1.5 py-0.5 rounded">
+                    A
+                  </span>
+                )}
+                {pair.level === "Fail" && (
+                  <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded">
+                    Fail
+                  </span>
+                )}
               </div>
             </div>
-          ))}
-
-          <div className="text-xs text-muted-foreground mt-1">
-            <p>WCAG 2.1 Compliance:</p>
-            <ul className="list-disc list-inside ml-2 mt-1 space-y-0.5">
-              <li>
-                AAA: {passedAAA} of {totalPairs} colors (7:1 contrast for normal
-                text)
-              </li>
-              <li>
-                AA: {passedAA} of {totalPairs} colors (4.5:1 contrast for normal
-                text)
-              </li>
-            </ul>
+            <div
+              className="p-2 flex items-center justify-center"
+              style={{ backgroundColor: pair.backgroundColor }}
+            >
+              <CopyButton
+                textToCopy={pair.backgroundColor}
+                className="bg-white/20 hover:bg-white/30"
+              />
+            </div>
           </div>
+        ))}
+
+        <div className="text-xs text-muted-foreground mt-1">
+          <p>WCAG 2.1 Compliance:</p>
+          <ul className="list-disc list-inside ml-2 mt-1 space-y-0.5">
+            <li>
+              AAA: {passedAAA} of {totalPairs} colors (7:1 contrast for normal
+              text)
+            </li>
+            <li>
+              AA: {passedAA} of {totalPairs} colors (4.5:1 contrast for normal
+              text)
+            </li>
+          </ul>
         </div>
-      )}
+      </div>
     </div>
   );
 }
