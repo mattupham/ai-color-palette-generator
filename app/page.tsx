@@ -2,6 +2,7 @@
 
 import type React from "react";
 
+import { AccessibilityView } from "@/components/accessibility-view";
 import { CopyButton } from "@/components/copy-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -187,6 +188,8 @@ export default function Home() {
                           </div>
                         ))}
                       </div>
+
+                      <AccessibilityView colors={palette.colors} />
                     </div>
                   ))}
                 </div>
