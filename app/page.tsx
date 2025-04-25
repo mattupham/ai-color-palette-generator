@@ -185,7 +185,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex flex-col items-center p-16 md:p-24">
+      <main className="flex flex-col items-center px-4 py-8 sm:px-8 sm:py-12 md:px-16 md:py-16 lg:px-24 lg:py-24">
         <div className="w-full max-w-3xl space-y-8">
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold tracking-tighter md:text-4xl lg:text-6xl">
