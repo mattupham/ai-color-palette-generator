@@ -29,13 +29,14 @@ export async function POST(request: Request) {
         {
           role: "system",
           content:
-            "You are a color palette generator that creates harmonious color schemes based on feelings or moods. You only respond with valid JSON.",
+            "You are an expert graphic designer and color palette generator that creates harmonious color schemes based on feelings or moods. You only respond with valid JSON.",
         },
         {
           role: "user",
           content: prompt,
         },
       ],
+      temperature: 0.7,
       response_format: { type: "json_object" },
     });
 
