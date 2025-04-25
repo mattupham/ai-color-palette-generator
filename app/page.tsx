@@ -242,15 +242,6 @@ export default function Home() {
                         <span className="text-sm font-medium">
                           {palette.name || `Palette ${index + 1}`}
                         </span>
-                        <Link
-                          href={`/preview?colors=${encodeURIComponent(
-                            JSON.stringify(palette)
-                          )}`}
-                          className="text-xs text-primary hover:underline"
-                          target="_blank"
-                        >
-                          Preview
-                        </Link>
                       </div>
                       <div className="flex h-24 w-full overflow-hidden rounded-lg">
                         {palette.colors.map((color, colorIndex) => (
@@ -272,9 +263,12 @@ export default function Home() {
                           </div>
                         ))}
                       </div>
-                      <div className="flex justify-between">
+                      <div className="grid grid-cols-5 gap-0 w-full">
                         {palette.colors.map((color, colorIndex) => (
-                          <div key={colorIndex} className="text-xs font-mono">
+                          <div
+                            key={colorIndex}
+                            className="text-xs font-mono text-center"
+                          >
                             {color}
                           </div>
                         ))}
