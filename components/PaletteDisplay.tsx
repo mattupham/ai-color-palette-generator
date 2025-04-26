@@ -1,13 +1,10 @@
 import { PaletteCard } from "@/components/PaletteCard";
-import { Button } from "@/components/ui/button";
 import { Palette } from "@/lib/palette-generator";
-import { RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useRef } from "react";
 
 interface PaletteDisplayProps {
   palettes: Palette[];
   isPending: boolean;
-  onRefresh: () => void;
   accessibilityStates: Record<number, boolean>;
   onToggleAccessibility: (index: number) => void;
   activePaletteIndex: number | null;
@@ -17,7 +14,6 @@ interface PaletteDisplayProps {
 export function PaletteDisplay({
   palettes,
   isPending,
-  onRefresh,
   accessibilityStates,
   onToggleAccessibility,
   activePaletteIndex,
@@ -79,23 +75,10 @@ export function PaletteDisplay({
     return null;
   }
 
-  // Calculate if refresh should be disabled
-  const isRefreshDisabled =
-    palettes.length === 0 || isPending || !inputValue.trim();
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-semibold">Your Palettes</h2>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onRefresh}
-          disabled={isRefreshDisabled}
-        >
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Refresh
-        </Button>
       </div>
 
       <div className="grid gap-6">

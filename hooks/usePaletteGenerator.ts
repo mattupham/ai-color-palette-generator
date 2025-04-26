@@ -28,12 +28,6 @@ export function usePaletteGenerator() {
     generatePalette(inputValue);
   };
 
-  // Handle regenerating palettes
-  const regeneratePalettes = () => {
-    if (!feeling.trim()) return;
-    generatePalette(feeling);
-  };
-
   // Handle clicking on a recommended feeling
   const handleRecommendedFeelingClick = (recommendedFeeling: string) => {
     setInputValue(recommendedFeeling);
@@ -70,7 +64,6 @@ export function usePaletteGenerator() {
     palettes,
     mutation,
     handleSubmit,
-    regeneratePalettes,
     handleRecommendedFeelingClick,
   };
 }

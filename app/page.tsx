@@ -29,7 +29,6 @@ export default function Home() {
     palettes,
     mutation,
     handleSubmit,
-    regeneratePalettes,
     handleRecommendedFeelingClick,
   } = usePaletteGenerator();
 
@@ -97,7 +96,6 @@ export default function Home() {
             <PaletteDisplay
               palettes={palettes || []}
               isPending={mutation.isPending}
-              onRefresh={regeneratePalettes}
               accessibilityStates={accessibilityStates}
               onToggleAccessibility={toggleAccessibility}
               activePaletteIndex={activePaletteIndex}
