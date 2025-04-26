@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Color Palette Generator",
-  description: "Generate color palettes based on your feelings",
+  description: "Generate color palettes based on your vibe",
 };
 
 export default function RootLayout({

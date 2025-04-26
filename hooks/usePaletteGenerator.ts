@@ -6,8 +6,8 @@ import {
 } from "@/lib/palette-queries";
 import { useEffect, useState } from "react";
 
-export function usePaletteGenerator() {
-  const [feeling, setFeeling] = useState("");
+export function usePaletteGenerator(defaultFeeling: string) {
+  const [feeling, setFeeling] = useState(defaultFeeling);
   const [inputValue, setInputValue] = useState("");
   const [palettes, setPalettes] = useState<Palette[] | undefined>(undefined);
 
@@ -16,7 +16,7 @@ export function usePaletteGenerator() {
 
   // Load professional palette by default
   useEffect(() => {
-    generatePalette("professional");
+    generatePalette(defaultFeeling);
   }, []);
 
   // Handle form submission

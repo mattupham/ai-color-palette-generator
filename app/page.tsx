@@ -22,6 +22,8 @@ const RECOMMENDED_FEELINGS = [
   "nostalgic",
 ];
 
+const DEFAULT_FEELING = RECOMMENDED_FEELINGS[0];
+
 export default function Home() {
   const {
     inputValue,
@@ -30,7 +32,7 @@ export default function Home() {
     mutation,
     handleSubmit,
     handleRecommendedFeelingClick,
-  } = usePaletteGenerator();
+  } = usePaletteGenerator(DEFAULT_FEELING);
 
   const { accessibilityStates, activePaletteIndex, toggleAccessibility } =
     useAccessibilityToggle();
@@ -73,12 +75,10 @@ export default function Home() {
           />
 
           {/* Recommended feelings */}
-          {!inputValue.trim() && (
-            <RecommendedFeelings
-              feelings={RECOMMENDED_FEELINGS}
-              onFeelingClick={handleRecommendedFeelingClick}
-            />
-          )}
+          <RecommendedFeelings
+            feelings={RECOMMENDED_FEELINGS}
+            onFeelingClick={handleRecommendedFeelingClick}
+          />
 
           {/* Error message */}
           {mutation.isError && (

@@ -23,7 +23,7 @@ export function PaletteForm({
       className="flex w-full max-w-lg mx-auto gap-4 mb-4"
     >
       <Input
-        placeholder="I'm feeling..."
+        placeholder="My vibe is..."
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         className="flex-1"
