@@ -13,8 +13,8 @@ import Link from "next/link";
 // Recommended feelings for quick selection
 const RECOMMENDED_FEELINGS = [
   "professional", // Uses mock data
-  "summer", // Uses mock data
-  "autumn", // Uses mock data
+  "summer",
+  "autumn",
   "happy",
   "calm",
   "creative",

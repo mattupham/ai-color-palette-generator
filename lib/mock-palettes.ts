@@ -155,8 +155,9 @@ const autumnPalettes: Palette[] = [
 // Collection of all mock palettes by feeling
 const mockPalettesByFeeling: Record<string, Palette[]> = {
   professional: professionalPalettes,
-  summer: summerPalettes,
-  autumn: autumnPalettes,
+  // TODO - add these in after demo
+  // summer: summerPalettes,
+  // autumn: autumnPalettes,
 };
 
 // Function to get mock palettes based on feeling
