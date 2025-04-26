@@ -6,20 +6,22 @@ import { useCallback, useEffect, useRef } from "react";
 
 interface PaletteDisplayProps {
   palettes: Palette[];
-  isGenerating: boolean;
+  isPending: boolean;
   onRefresh: () => void;
   accessibilityStates: Record<number, boolean>;
   onToggleAccessibility: (index: number) => void;
   activePaletteIndex: number | null;
+  inputValue?: string;
 }
 
 export function PaletteDisplay({
   palettes,
-  isGenerating,
+  isPending,
   onRefresh,
   accessibilityStates,
   onToggleAccessibility,
   activePaletteIndex,
+  inputValue = "",
 }: PaletteDisplayProps) {
   // Create a stable ref object - MUST be before any conditional returns
   const paletteRefs = useRef<Map<number, HTMLDivElement | null>>(new Map());
@@ -77,6 +79,10 @@ export function PaletteDisplay({
     return null;
   }
 
+  // Calculate if refresh should be disabled
+  const isRefreshDisabled =
+    palettes.length === 0 || isPending || !inputValue.trim();
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -85,7 +91,7 @@ export function PaletteDisplay({
           variant="outline"
           size="sm"
           onClick={onRefresh}
-          disabled={isGenerating}
+          disabled={isRefreshDisabled}
         >
           <RefreshCw className="h-4 w-4 mr-2" />
           Refresh

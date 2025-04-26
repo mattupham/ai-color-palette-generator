@@ -12,12 +12,7 @@ export function usePaletteGenerator() {
   const [palettes, setPalettes] = useState<Palette[] | undefined>(undefined);
 
   // Use React Query mutation for generating palettes
-  const {
-    mutate,
-    isPending: isGenerating,
-    isError,
-    error,
-  } = usePaletteMutation();
+  const mutation = usePaletteMutation();
 
   // Load professional palette by default
   useEffect(() => {
@@ -56,7 +51,7 @@ export function usePaletteGenerator() {
       setPalettes(mockPalettes);
     } else {
       // Make API call for AI-generated palettes
-      mutate(feelingText, {
+      mutation.mutate(feelingText, {
         onSuccess: (data) => {
           setPalettes(data.palettes);
         },
@@ -73,9 +68,7 @@ export function usePaletteGenerator() {
     inputValue,
     setInputValue,
     palettes,
-    isGenerating,
-    isError,
-    error,
+    mutation,
     handleSubmit,
     regeneratePalettes,
     handleRecommendedFeelingClick,

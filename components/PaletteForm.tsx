@@ -6,14 +6,14 @@ interface PaletteFormProps {
   inputValue: string;
   setInputValue: (value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
-  isGenerating: boolean;
+  isPending: boolean;
 }
 
 export function PaletteForm({
   inputValue,
   setInputValue,
   onSubmit,
-  isGenerating,
+  isPending,
 }: PaletteFormProps) {
   return (
     <form
@@ -26,8 +26,8 @@ export function PaletteForm({
         onChange={(e) => setInputValue(e.target.value)}
         className="flex-1"
       />
-      <Button type="submit" disabled={isGenerating || !inputValue.trim()}>
-        {isGenerating ? "Generating..." : "Generate"}
+      <Button type="submit" disabled={isPending || !inputValue.trim()}>
+        {isPending ? "Generating..." : "Generate"}
       </Button>
     </form>
   );

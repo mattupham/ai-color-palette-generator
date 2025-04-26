@@ -27,9 +27,7 @@ export default function Home() {
     inputValue,
     setInputValue,
     palettes,
-    isGenerating,
-    isError,
-    error,
+    mutation,
     handleSubmit,
     regeneratePalettes,
     handleRecommendedFeelingClick,
@@ -72,7 +70,7 @@ export default function Home() {
             inputValue={inputValue}
             setInputValue={setInputValue}
             onSubmit={handleSubmit}
-            isGenerating={isGenerating}
+            isPending={mutation.isPending}
           />
 
           {/* Recommended feelings */}
@@ -84,25 +82,26 @@ export default function Home() {
           )}
 
           {/* Error message */}
-          {isError && (
+          {mutation.isError && (
             <div className="p-4 text-red-500 bg-red-50 dark:bg-red-950/20 rounded-lg">
-              {error instanceof Error
-                ? error.message
+              {mutation.error instanceof Error
+                ? mutation.error.message
                 : "Failed to generate palettes. Please try again."}
             </div>
           )}
 
           {/* Loading state or palette display */}
-          {isGenerating ? (
+          {mutation.isPending ? (
             <LoadingSkeletons />
           ) : (
             <PaletteDisplay
               palettes={palettes || []}
-              isGenerating={isGenerating}
+              isPending={mutation.isPending}
               onRefresh={regeneratePalettes}
               accessibilityStates={accessibilityStates}
               onToggleAccessibility={toggleAccessibility}
               activePaletteIndex={activePaletteIndex}
+              inputValue={inputValue}
             />
           )}
         </div>
