@@ -56,7 +56,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex flex-col items-center p-16 md:p-24 mt-14">
+      <main className="flex flex-col items-center p-4 pt-16 md:p-12 lg:p-24 mt-14">
         <div className="w-full max-w-3xl space-y-8">
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold tracking-tighter md:text-4xl lg:text-6xl">
