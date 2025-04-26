@@ -1,6 +1,28 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "next/typescript"
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "plugins": ["import"],
+  "rules": {
+    "import/no-default-export": "error",
+    "@typescript-eslint/no-unused-vars": "error"
+  },
+  "overrides": [
+    {
+      "files": [
+        "app/**/*.ts",
+        "app/**/*.tsx",
+        "pages/**/*.ts",
+        "pages/**/*.tsx"
+      ],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    },
+    {
+      "files": ["components/ui/**/*.ts", "components/ui/**/*.tsx"],
+      "rules": {
+        "import/no-default-export": "off",
+        "@typescript-eslint/no-unused-vars": "off"
+      }
+    }
   ]
 }

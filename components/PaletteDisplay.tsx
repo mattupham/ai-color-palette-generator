@@ -102,7 +102,6 @@ export function PaletteDisplay({
               key={index}
               palette={palette}
               index={index}
-              isActive={isActive}
               shouldFade={shouldFade}
               showAccessibility={!!accessibilityStates[index]}
               onToggleAccessibility={() => onToggleAccessibility(index)}

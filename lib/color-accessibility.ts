@@ -87,14 +87,6 @@ function getWCAGLevel(
 }
 
 /**
- * Determines if text color should be white or black based on background color
- */
-function getTextColor(backgroundColor: string): "white" | "black" {
-  const luminance = calculateRelativeLuminance(backgroundColor);
-  return luminance > 0.5 ? "black" : "white";
-}
-
-/**
  * Interface for color contrast analysis result
  */
 interface ContrastAnalysisResult {
@@ -129,69 +121,4 @@ export function analyzeContrast(
     isLargeText,
     formattedRatio,
   };
-}
-
-/**
- * Analyze all possible text/background color combinations in a palette
- */
-function analyzePaletteContrast(
-  colors: string[]
-): ContrastAnalysisResult[] {
-  const results: ContrastAnalysisResult[] = [];
-
-  // Check all possible combinations
-  for (let i = 0; i < colors.length; i++) {
-    for (let j = 0; j < colors.length; j++) {
-      if (i !== j) {
-        // Analyze both as normal and large text
-        results.push(analyzeContrast(colors[i], colors[j], false));
-      }
-    }
-  }
-
-  return results;
-}
-
-/**
- * Get accessible text/background color pairs from a palette
- * Returns pairs that meet at least AA standard
- */
-function getAccessibleColorPairs(
-  colors: string[]
-): {
-  text: string;
-  background: string;
-  contrastRatio: number;
-  level: string;
-  formattedRatio: string;
-}[] {
-  const results: {
-    text: string;
-    background: string;
-    contrastRatio: number;
-    level: string;
-    formattedRatio: string;
-  }[] = [];
-
-  for (let i = 0; i < colors.length; i++) {
-    for (let j = 0; j < colors.length; j++) {
-      if (i !== j) {
-        const analysis = analyzeContrast(colors[i], colors[j]);
-
-        // Only include pairs that meet at least AA standard
-        if (analysis.level === "AA" || analysis.level === "AAA") {
-          results.push({
-            text: colors[i],
-            background: colors[j],
-            contrastRatio: analysis.contrastRatio,
-            level: analysis.level,
-            formattedRatio: analysis.formattedRatio,
-          });
-        }
-      }
-    }
-  }
-
-  // Sort by contrast ratio (highest first)
-  return results.sort((a, b) => b.contrastRatio - a.contrastRatio);
 }

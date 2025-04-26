@@ -8,16 +8,12 @@ import { CheckCircle2, ChevronDown, XCircle } from "lucide-react";
 
 interface AccessibilityViewProps {
   colors: string[];
-  isPreview?: boolean;
   showAccessibility: boolean;
-  onToggleAccessibility: () => void;
 }
 
 export function AccessibilityView({
   colors,
-  isPreview = false,
   showAccessibility,
-  onToggleAccessibility,
 }: AccessibilityViewProps) {
   // Get best text colors (white or black) for each background color
   const colorPairs = colors.map((bgColor) => {

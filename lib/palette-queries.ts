@@ -1,7 +1,7 @@
+import { getMockPalettes } from "@/lib/mock-palettes";
+import { Palette } from "@/lib/palette-generator";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { getMockPalettes } from "./mock-palettes";
-import { Palette } from "./palette-generator";
 
 // Interface for API response
 interface PaletteResponse {

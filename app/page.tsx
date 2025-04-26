@@ -63,7 +63,7 @@ export default function Home() {
               Color Palette Generator
             </h1>
             <p className="text-base text-muted-foreground md:text-lg lg:text-2xl">
-              Type how you're feeling and get beautiful color palettes
+              Type how you&apos;re feeling and get beautiful color palettes
             </p>
           </div>
 

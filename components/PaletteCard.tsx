@@ -8,7 +8,6 @@ import { Palette } from "@/lib/palette-generator";
 interface PaletteCardProps {
   palette: Palette;
   index: number;
-  isActive: boolean;
   shouldFade: boolean;
   showAccessibility: boolean;
   onToggleAccessibility: () => void;
@@ -18,7 +17,6 @@ interface PaletteCardProps {
 export function PaletteCard({
   palette,
   index,
-  isActive,
   shouldFade,
   showAccessibility,
   onToggleAccessibility,
@@ -73,7 +71,6 @@ export function PaletteCard({
       <AccessibilityView
         colors={palette.colors}
         showAccessibility={showAccessibility}
-        onToggleAccessibility={onToggleAccessibility}
       />
     </div>
   );

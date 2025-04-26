@@ -1,12 +1,12 @@
+import { Palette } from "@/lib/palette-generator";
+import { getFallbackPalettes, usePaletteQuery } from "@/lib/palette-queries";
 import React, { useState } from "react";
-import { Palette } from "../lib/palette-generator";
-import { getFallbackPalettes, usePaletteQuery } from "../lib/palette-queries";
 
 interface PaletteGeneratorProps {
   useMockData?: boolean;
 }
 
-const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
+export const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
   useMockData = false,
 }) => {
   const [feeling, setFeeling] = useState("");
@@ -97,5 +97,3 @@ const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
     </div>
   );
 };
-
-export default PaletteGenerator;
