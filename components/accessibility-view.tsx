@@ -71,7 +71,7 @@ export function AccessibilityView({
               style={{ color: pair.textColor }}
             >
               <span>{pair.isWhiteText ? "White Text" : "Black Text"}</span>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 <span className="text-xs font-mono">{pair.formattedRatio}</span>
                 {pair.level === "AAA" && (
                   <span className="bg-green-500 text-white text-xs px-1.5 py-0.5 rounded">
