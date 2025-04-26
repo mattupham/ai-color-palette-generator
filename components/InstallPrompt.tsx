@@ -13,22 +13,8 @@ export function InstallPrompt() {
     setIsStandalone(window.matchMedia("(display-mode: standalone)").matches);
   }, []);
 
-  // Prevent scrolling on body when component is mounted
-  useEffect(() => {
-    // Save the original overflow value
-    const originalOverflow = document.body.style.overflow;
-
-    // Prevent scrolling
-    document.body.style.overflow = "hidden";
-
-    // Restore original overflow on cleanup
-    return () => {
-      document.body.style.overflow = originalOverflow;
-    };
-  }, []);
-
-  if (isStandalone) {
-    return null; // Don't show install button if already installed
+  if (!isIOS || isStandalone) {
+    return null; // Don't show install button if already installed or not iOS
   }
 
   return (
