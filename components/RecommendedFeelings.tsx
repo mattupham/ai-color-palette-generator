@@ -10,7 +10,7 @@ export function RecommendedFeelings({
   onFeelingClick,
 }: RecommendedFeelingsProps) {
   return (
-    <div className="flex flex-wrap gap-2 justify-center max-w-lg mx-auto">
+    <div className="flex flex-wrap gap-2 justify-center max-w-lg mx-auto mb-4">
       {feelings.map((feeling) => (
         <Badge
           key={feeling}
