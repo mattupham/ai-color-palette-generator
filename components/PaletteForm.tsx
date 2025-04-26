@@ -15,6 +15,8 @@ export function PaletteForm({
   onSubmit,
   isPending,
 }: PaletteFormProps) {
+  const disabled = isPending || !inputValue.trim();
+
   return (
     <form
       onSubmit={onSubmit}
@@ -26,8 +28,8 @@ export function PaletteForm({
         onChange={(e) => setInputValue(e.target.value)}
         className="flex-1"
       />
-      <Button type="submit" disabled={isPending || !inputValue.trim()}>
-        {isPending ? "Generating..." : "Generate"}
+      <Button type="submit" isLoading={isPending} disabled={disabled}>
+        Generate
       </Button>
     </form>
   );
