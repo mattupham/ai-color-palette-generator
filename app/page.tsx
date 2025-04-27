@@ -62,7 +62,7 @@ export default function Home() {
         <div className="w-full max-w-3xl space-y-8">
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold tracking-tighter md:text-4xl lg:text-6xl">
-              Color Palette Generator
+              AI Color Palette Generator
             </h1>
             <p className="text-base text-muted-foreground md:text-lg lg:text-2xl">
               Type your vibe and get beautiful color palettes
