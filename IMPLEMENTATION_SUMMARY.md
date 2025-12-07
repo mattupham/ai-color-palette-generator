@@ -186,12 +186,12 @@ User Router (`trpc.user.*`):
 ### Before (REST API)
 ```typescript
 // Client
-const response = await axios.post("/api/generate-palettes", { feeling });
+const response = await axios.post("/api/generate-palettes", { vibe });
 const palettes = response.data.palettes;
 
 // Server (app/api/generate-palettes/route.ts)
 export async function POST(request: Request) {
-  const { feeling } = await request.json();
+  const { vibe } = await request.json();
   // ... OpenAI call
   return NextResponse.json(data);
 }
@@ -201,7 +201,7 @@ export async function POST(request: Request) {
 ```typescript
 // Client
 const mutation = trpc.palette.generatePalettes.useMutation();
-mutation.mutate({ feeling }, {
+mutation.mutate({ vibe }, {
   onSuccess: (data) => {
     const palettes = data.palettes;
   }
@@ -210,7 +210,7 @@ mutation.mutate({ feeling }, {
 // Server (lib/trpc/routers/palette.ts)
 export const paletteRouter = router({
   generatePalettes: protectedProcedure
-    .input(z.object({ feeling: z.string() }))
+    .input(z.object({ vibe: z.string() }))
     .mutation(async ({ input }) => {
       // ... OpenAI call
       return paletteResponseSchema.parse(data);

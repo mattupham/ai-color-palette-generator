@@ -2,17 +2,17 @@
 
 ![Color Palette Generator](public/placeholder-logo.svg)
 
-A modern web application that generates beautiful, accessible color palettes based on feelings or moods using AI. Built with Next.js, React, and OpenAI.
+A modern web application that generates beautiful, accessible color palettes based on vibes or moods using AI. Built with Next.js, React, and OpenAI.
 
 ## ✨ Features
 
-- **AI-Powered Palettes**: Enter how you're feeling, and get personalized color palettes
+- **AI-Powered Palettes**: Enter your vibe, and get personalized color palettes
 - **Accessibility Focused**: All generated palettes follow WCAG 2.1 accessibility guidelines
 - **Copy with Ease**: One-click copying of color hex codes
 - **Accessibility Checker**: Verify text contrast ratios against background colors
 - **Dark/Light Mode**: Full theme support with seamless transitions
 - **Responsive Design**: Works beautifully on all devices
-- **Quick Suggestions**: Pre-defined feeling options for instant inspiration
+- **Quick Suggestions**: Pre-defined vibe options for instant inspiration
 
 ## 🛠️ Tech Stack
 
@@ -106,7 +106,7 @@ A modern web application that generates beautiful, accessible color palettes bas
 ## 📱 Usage
 
 1. Sign in with your Google account
-2. Enter a feeling or mood in the input field (e.g., "energetic", "calm", "professional")
+2. Enter a vibe or mood in the input field (e.g., "energetic", "calm", "professional")
 3. Click "Generate" or press Enter
 4. Browse through the AI-generated color palettes
 5. Click on any color to copy its hex code

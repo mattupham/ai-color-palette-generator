@@ -7,12 +7,12 @@ import { InstallPrompt } from "@/components/InstallPrompt";
 import { LoadingSkeletons } from "@/components/LoadingSkeletons";
 import { PaletteDisplay } from "@/components/PaletteDisplay";
 import { PaletteForm } from "@/components/PaletteForm";
-import { RecommendedFeelings } from "@/components/RecommendedFeelings";
+import { RecommendedVibes } from "@/components/RecommendedVibes";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useAccessibilityToggle } from "@/hooks/useAccessibilityToggle";
 import { usePaletteGenerator } from "@/hooks/usePaletteGenerator";
 
-const RECOMMENDED_FEELINGS = [
+const RECOMMENDED_VIBES = [
 	"professional",
 	"summer",
 	"autumn",
@@ -23,7 +23,7 @@ const RECOMMENDED_FEELINGS = [
 	"nostalgic",
 ];
 
-const DEFAULT_FEELING = RECOMMENDED_FEELINGS[0];
+const DEFAULT_VIBE = RECOMMENDED_VIBES[0];
 
 export function AuthenticatedHome() {
 	const {
@@ -32,8 +32,8 @@ export function AuthenticatedHome() {
 		palettes,
 		mutation,
 		handleSubmit,
-		handleRecommendedFeelingClick,
-	} = usePaletteGenerator(DEFAULT_FEELING);
+		handleRecommendedVibeClick,
+	} = usePaletteGenerator(DEFAULT_VIBE);
 
 	const { accessibilityStates, activePaletteIndex, toggleAccessibility } =
 		useAccessibilityToggle();
@@ -77,9 +77,9 @@ export function AuthenticatedHome() {
 						setInputValue={setInputValue}
 					/>
 
-					<RecommendedFeelings
-						feelings={RECOMMENDED_FEELINGS}
-						onFeelingClick={handleRecommendedFeelingClick}
+					<RecommendedVibes
+						onVibeClick={handleRecommendedVibeClick}
+						vibes={RECOMMENDED_VIBES}
 					/>
 
 					{mutation.isError && (

@@ -16,14 +16,14 @@ const paletteSchema = z.object({
 
 const paletteResponseSchema = z.object({
   palettes: z.array(paletteSchema),
-  feeling: z.string(),
+  vibe: z.string(),
 });
 
 export const paletteRouter = router({
   generatePalettes: protectedProcedure
-    .input(z.object({ feeling: z.string() }))
+    .input(z.object({ vibe: z.string() }))
     .mutation(async ({ input }) => {
-      const prompt = getPaletteGeneratorPrompt(input.feeling);
+      const prompt = getPaletteGeneratorPrompt(input.vibe);
 
       const response = await openai.chat.completions.create({
         model: env.OPENAI_MODEL,
@@ -31,7 +31,7 @@ export const paletteRouter = router({
           {
             role: "system",
             content:
-              "You are an expert graphic designer and color palette generator that creates harmonious color schemes based on feelings or moods. You only respond with valid JSON.",
+              "You are an expert graphic designer and color palette generator that creates harmonious color schemes based on vibes or moods. You only respond with valid JSON.",
           },
           {
             role: "user",

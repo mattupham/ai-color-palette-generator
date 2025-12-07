@@ -36,7 +36,7 @@ export const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
 			const mockPalettes = getMockPalettes(inputValue.toLowerCase());
 			setPalettes(mockPalettes || getFallbackPalettes());
 		} else {
-			mutation.mutate({ feeling: inputValue });
+			mutation.mutate({ vibe: inputValue });
 		}
 	};
 
@@ -46,7 +46,7 @@ export const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
 				<input
 					className="input"
 					onChange={(e) => setInputValue(e.target.value)}
-					placeholder="Enter a feeling or mood..."
+					placeholder="Enter a vibe or mood..."
 					type="text"
 					value={inputValue}
 				/>
