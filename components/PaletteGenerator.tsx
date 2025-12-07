@@ -11,7 +11,6 @@ interface PaletteGeneratorProps {
 export const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
 	useMockData = false,
 }) => {
-	const [feeling, setFeeling] = useState("");
 	const [inputValue, setInputValue] = useState("");
 	const [palettes, setPalettes] = useState<Palette[] | undefined>(undefined);
 
@@ -32,8 +31,7 @@ export const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
 	// Handle form submission
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		setFeeling(inputValue);
-		
+
 		if (useMockData) {
 			const mockPalettes = getMockPalettes(inputValue.toLowerCase());
 			setPalettes(mockPalettes || getFallbackPalettes());

@@ -74,7 +74,7 @@ export function PaletteDisplay({
 	return (
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
-				<h2 className="font-semibold text-2xl">Your Palettes</h2>
+				<h2 className="font-semibold text-2xl">Palettes</h2>
 			</div>
 
 			<div className="grid gap-6">

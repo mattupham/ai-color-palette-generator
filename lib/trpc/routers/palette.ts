@@ -1,7 +1,5 @@
 import { env } from "@/env";
-import { savedPalette } from "@/lib/db/schema";
 import { getPaletteGeneratorPrompt } from "@/lib/prompts/palette-generator";
-import { eq } from "drizzle-orm";
 import { OpenAI } from "openai";
 import { z } from "zod";
 import { protectedProcedure, router } from "../server";
@@ -51,46 +49,5 @@ export const paletteRouter = router({
 
       const data = JSON.parse(content);
       return paletteResponseSchema.parse(data);
-    }),
-
-  savePalette: protectedProcedure
-    .input(
-      z.object({
-        name: z.string(),
-        feeling: z.string(),
-        colors: z.array(z.string()),
-        roles: z.array(z.string()),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const id = crypto.randomUUID();
-      await ctx.db.insert(savedPalette).values({
-        id,
-        userId: ctx.user.id,
-        name: input.name,
-        feeling: input.feeling,
-        colors: input.colors,
-        roles: input.roles,
-      });
-
-      return { id };
-    }),
-
-  getUserPalettes: protectedProcedure.query(async ({ ctx }) => {
-    const palettes = await ctx.db
-      .select()
-      .from(savedPalette)
-      .where(eq(savedPalette.userId, ctx.user.id))
-      .orderBy(savedPalette.createdAt);
-
-    return palettes;
-  }),
-
-  deletePalette: protectedProcedure
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.db.delete(savedPalette).where(eq(savedPalette.id, input.id));
-
-      return { success: true };
     }),
 });
