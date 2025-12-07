@@ -69,9 +69,9 @@ export function getMockPalettes(vibe: string): Palette[] | null {
 	}
 
 	// Look for partial matches
-	for (const key of Object.keys(mockPalettesByFeeling)) {
-		if (normalizedFeeling.includes(key) || key.includes(normalizedFeeling)) {
-			return mockPalettesByFeeling[key];
+	for (const key of Object.keys(mockPalettesByVibe)) {
+		if (normalizedVibe.includes(key) || key.includes(normalizedVibe)) {
+			return mockPalettesByVibe[key];
 		}
 	}
 
