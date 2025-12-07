@@ -1,9 +1,6 @@
 "use client";
 
-import { Github } from "lucide-react";
-import Link from "next/link";
 import { UserMenu } from "@/components/auth/user-menu";
-import { InstallPrompt } from "@/components/InstallPrompt";
 import { LoadingSkeletons } from "@/components/LoadingSkeletons";
 import { PaletteDisplay } from "@/components/PaletteDisplay";
 import { PaletteForm } from "@/components/PaletteForm";
@@ -11,6 +8,8 @@ import { RecommendedVibes } from "@/components/RecommendedVibes";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useAccessibilityToggle } from "@/hooks/useAccessibilityToggle";
 import { usePaletteGenerator } from "@/hooks/usePaletteGenerator";
+import { Github } from "lucide-react";
+import Link from "next/link";
 
 const RECOMMENDED_VIBES = [
 	"professional",
@@ -58,8 +57,6 @@ export function AuthenticatedHome() {
 			</header>
 
 			<main className="mt-14 flex flex-col items-center p-4 pt-16 md:p-12 lg:p-24">
-				<InstallPrompt />
-
 				<div className="w-full max-w-3xl space-y-8">
 					<div className="space-y-2 text-center">
 						<h1 className="font-bold text-3xl tracking-tighter md:text-4xl lg:text-6xl">
