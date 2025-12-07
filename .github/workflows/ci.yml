@@ -33,3 +33,5 @@ jobs:
 
       - name: Build
         run: pnpm build
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'sk-dummy-key-for-build-only' }}
