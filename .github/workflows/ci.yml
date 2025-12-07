@@ -35,3 +35,5 @@ jobs:
         run: pnpm build
         env:
           SKIP_ENV_VALIDATION: true
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
