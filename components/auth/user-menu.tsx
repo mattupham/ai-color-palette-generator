@@ -1,5 +1,6 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,7 +18,9 @@ export function UserMenu() {
 
   if (isPending) {
     return (
-      <div className="h-10 w-10 animate-pulse rounded-full bg-muted" />
+      <Avatar>
+        <AvatarFallback className="animate-pulse" />
+      </Avatar>
     );
   }
 
@@ -30,32 +33,40 @@ export function UserMenu() {
     window.location.href = "/";
   };
 
-  const userInitial = 
-    session.user.name?.charAt(0).toUpperCase() || 
-    session.user.email?.charAt(0).toUpperCase() || 
+  const userInitial =
+    session.user.name?.charAt(0).toUpperCase() ||
+    session.user.email?.charAt(0).toUpperCase() ||
     "U";
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full h-10 w-10">
-          <div className="flex h-full w-full items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold">
-            {userInitial}
-          </div>
+        <Button className="relative h-10 w-10 rounded-full p-0" variant="ghost">
+          <Avatar>
+            <AvatarImage
+              alt={session.user.name || "User avatar"}
+              src={session.user.image || undefined}
+            />
+            <AvatarFallback className="bg-primary font-semibold text-primary-foreground">
+              {userInitial}
+            </AvatarFallback>
+          </Avatar>
           <span className="sr-only">User menu</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{session.user.name}</p>
-            <p className="text-xs leading-none text-muted-foreground">
+            <p className="font-medium text-sm leading-none">
+              {session.user.name}
+            </p>
+            <p className="text-muted-foreground text-xs leading-none">
               {session.user.email}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+        <DropdownMenuItem className="cursor-pointer" onClick={handleSignOut}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Sign out</span>
         </DropdownMenuItem>
@@ -63,4 +74,3 @@ export function UserMenu() {
     </DropdownMenu>
   );
 }
-
