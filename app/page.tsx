@@ -99,8 +99,6 @@ export default function Home() {
 						<PaletteDisplay
 							accessibilityStates={accessibilityStates}
 							activePaletteIndex={activePaletteIndex}
-							inputValue={inputValue}
-							isPending={mutation.isPending}
 							onToggleAccessibility={toggleAccessibility}
 							palettes={palettes || []}
 						/>

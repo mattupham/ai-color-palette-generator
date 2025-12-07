@@ -4,20 +4,16 @@ import type { Palette } from "@/lib/palette-generator";
 
 interface PaletteDisplayProps {
 	palettes: Palette[];
-	isPending: boolean;
 	accessibilityStates: Record<number, boolean>;
 	onToggleAccessibility: (index: number) => void;
 	activePaletteIndex: number | null;
-	inputValue?: string;
 }
 
 export function PaletteDisplay({
 	palettes,
-	isPending: _isPending,
 	accessibilityStates,
 	onToggleAccessibility,
 	activePaletteIndex,
-	inputValue: _inputValue = "",
 }: PaletteDisplayProps) {
 	// Create a stable ref object - MUST be before any conditional returns
 	const paletteRefs = useRef<Map<number, HTMLDivElement | null>>(new Map());
