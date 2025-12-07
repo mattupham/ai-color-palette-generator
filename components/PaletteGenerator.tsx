@@ -1,7 +1,8 @@
 import type React from "react";
 import { useState } from "react";
 import type { Palette } from "@/lib/palette-generator";
-import { getFallbackPalettes, usePaletteQuery } from "@/lib/palette-queries";
+import { getFallbackPalettes, getMockPalettes } from "@/lib/palette-queries";
+import { trpc } from "@/lib/trpc/client";
 
 interface PaletteGeneratorProps {
 	useMockData?: boolean;
@@ -12,19 +13,33 @@ export const PaletteGenerator: React.FC<PaletteGeneratorProps> = ({
 }) => {
 	const [feeling, setFeeling] = useState("");
 	const [inputValue, setInputValue] = useState("");
+	const [palettes, setPalettes] = useState<Palette[] | undefined>(undefined);
 
-	// Use React Query to fetch palettes
-	const {
-		data: palettes,
-		isPending,
-		isError,
-		error,
-	} = usePaletteQuery(feeling, useMockData);
+	// Use tRPC mutation to generate palettes
+	const mutation = trpc.palette.generatePalettes.useMutation({
+		onSuccess: (data) => {
+			setPalettes(data.palettes);
+		},
+		onError: () => {
+			setPalettes(getFallbackPalettes());
+		},
+	});
+
+	const isPending = mutation.isPending;
+	const isError = mutation.isError;
+	const error = mutation.error;
 
 	// Handle form submission
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		setFeeling(inputValue);
+		
+		if (useMockData) {
+			const mockPalettes = getMockPalettes(inputValue.toLowerCase());
+			setPalettes(mockPalettes || getFallbackPalettes());
+		} else {
+			mutation.mutate({ feeling: inputValue });
+		}
 	};
 
 	return (

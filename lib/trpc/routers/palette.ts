@@ -1,12 +1,13 @@
-import { z } from "zod";
-import { router, protectedProcedure } from "../server";
-import { OpenAI } from "openai";
-import { getPaletteGeneratorPrompt } from "@/lib/prompts/palette-generator";
+import { env } from "@/env";
 import { savedPalette } from "@/lib/db/schema";
+import { getPaletteGeneratorPrompt } from "@/lib/prompts/palette-generator";
 import { eq } from "drizzle-orm";
+import { OpenAI } from "openai";
+import { z } from "zod";
+import { protectedProcedure, router } from "../server";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: env.OPENAI_API_KEY,
 });
 
 const paletteSchema = z.object({
@@ -27,7 +28,7 @@ export const paletteRouter = router({
       const prompt = getPaletteGeneratorPrompt(input.feeling);
 
       const response = await openai.chat.completions.create({
-        model: (process.env.OPENAI_MODEL as string) || "gpt-4-turbo-preview",
+        model: env.OPENAI_MODEL,
         messages: [
           {
             role: "system",
@@ -88,11 +89,8 @@ export const paletteRouter = router({
   deletePalette: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.db
-        .delete(savedPalette)
-        .where(eq(savedPalette.id, input.id));
+      await ctx.db.delete(savedPalette).where(eq(savedPalette.id, input.id));
 
       return { success: true };
     }),
 });
-
