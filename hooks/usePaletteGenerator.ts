@@ -3,16 +3,16 @@ import type { Palette } from "@/lib/palette-generator";
 import {
 	getFallbackPalettes,
 	getMockPalettes,
-	usePaletteMutation,
 } from "@/lib/palette-queries";
+import { trpc } from "@/lib/trpc/client";
 
 export function usePaletteGenerator(defaultFeeling: string) {
 	const [feeling, setFeeling] = useState(defaultFeeling);
 	const [inputValue, setInputValue] = useState("");
 	const [palettes, setPalettes] = useState<Palette[] | undefined>(undefined);
 
-	// Use React Query mutation for generating palettes
-	const mutation = usePaletteMutation();
+	// Use tRPC mutation for generating palettes
+	const mutation = trpc.palette.generatePalettes.useMutation();
 
 	// Core function to generate a palette based on feeling
 	const generatePalette = (feelingText: string) => {
@@ -23,8 +23,8 @@ export function usePaletteGenerator(defaultFeeling: string) {
 		if (mockPalettes && mockPalettes.length > 0) {
 			setPalettes(mockPalettes);
 		} else {
-			// Make API call for AI-generated palettes
-			mutation.mutate(feelingText, {
+			// Make tRPC call for AI-generated palettes
+			mutation.mutate({ feeling: feelingText }, {
 				onSuccess: (data) => {
 					setPalettes(data.palettes);
 				},

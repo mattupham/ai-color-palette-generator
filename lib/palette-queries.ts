@@ -1,40 +1,8 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { getMockPalettes } from "@/lib/mock-palettes";
 import type { Palette } from "@/lib/palette-generator";
 
-// Interface for API response
-interface PaletteResponse {
-	palettes: Palette[];
-	feeling: string;
-}
-
-// Query function for generating palettes
-const fetchPalettes = async (feeling: string): Promise<PaletteResponse> => {
-	const response = await axios.post("/api/generate-palettes", { feeling });
-	return response.data;
-};
-
-// React Query hook for palette generation
-export const usePaletteQuery = (feeling: string, useMockData: boolean) => {
-	return useQuery<PaletteResponse, Error, Palette[]>({
-		queryKey: ["palettes", feeling],
-		queryFn: () => fetchPalettes(feeling),
-		select: (data) => data.palettes,
-		enabled: !useMockData && !!feeling,
-		// If mock data is enabled, don't execute the query
-		placeholderData: useMockData
-			? { palettes: getMockPalettes(feeling) || [], feeling }
-			: undefined,
-	});
-};
-
-// React Query mutation hook for generating palettes
-export const usePaletteMutation = () => {
-	return useMutation({
-		mutationFn: (feeling: string) => fetchPalettes(feeling),
-	});
-};
+// Note: usePaletteMutation is now provided by tRPC
+// Import from: trpc.palette.generatePalettes.useMutation()
 
 // Backward compatible function to maintain compatibility with existing code
 export async function generatePalettes(
@@ -46,13 +14,9 @@ export async function generatePalettes(
 		return getMockPalettes(feeling) || [];
 	}
 
-	try {
-		const response = await axios.post("/api/generate-palettes", { feeling });
-		return response.data.palettes;
-	} catch (error) {
-		console.error("Error generating palettes:", error);
-		return getFallbackPalettes();
-	}
+	// This function is deprecated - use tRPC mutation instead
+	console.warn("generatePalettes is deprecated, use tRPC mutation instead");
+	return getFallbackPalettes();
 }
 
 // Fallback palettes to use in case of error
