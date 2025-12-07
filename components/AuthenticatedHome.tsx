@@ -1,5 +1,7 @@
 "use client";
 
+import { Github } from "lucide-react";
+import Link from "next/link";
 import { UserMenu } from "@/components/auth/user-menu";
 import { LoadingSkeletons } from "@/components/LoadingSkeletons";
 import { PaletteDisplay } from "@/components/PaletteDisplay";
@@ -8,8 +10,6 @@ import { RecommendedVibes } from "@/components/RecommendedVibes";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useAccessibilityToggle } from "@/hooks/useAccessibilityToggle";
 import { usePaletteGenerator } from "@/hooks/usePaletteGenerator";
-import { Github } from "lucide-react";
-import Link from "next/link";
 
 const RECOMMENDED_VIBES = [
 	"professional",
