@@ -3,7 +3,7 @@
  * @param feeling - The feeling or mood to base the palette on
  */
 export function getPaletteGeneratorPrompt(feeling: string): string {
-  return `Generate 8 color palettes based on the feeling or mood: "${feeling}".
+	return `Generate 8 color palettes based on the feeling or mood: "${feeling}".
 Each palette should have 5 colors that harmoniously work together.
 
 ACCESSIBILITY REQUIREMENTS (WCAG 2.1):

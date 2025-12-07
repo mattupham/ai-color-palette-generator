@@ -1,5 +1,5 @@
 export interface Palette {
-  name: string;
-  colors: string[];
-  roles?: string[];
+	name: string;
+	colors: string[];
+	roles?: string[];
 }
