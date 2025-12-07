@@ -12,9 +12,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { useAccessibilityToggle } from "@/hooks/useAccessibilityToggle";
 import { usePaletteGenerator } from "@/hooks/usePaletteGenerator";
 
-// Recommended feelings for quick selection
 const RECOMMENDED_FEELINGS = [
-	"professional", // Uses mock data
+	"professional",
 	"summer",
 	"autumn",
 	"happy",
@@ -71,7 +70,6 @@ export function AuthenticatedHome() {
 						</p>
 					</div>
 
-					{/* Form for entering feeling */}
 					<PaletteForm
 						inputValue={inputValue}
 						isPending={mutation.isPending}
@@ -79,13 +77,11 @@ export function AuthenticatedHome() {
 						setInputValue={setInputValue}
 					/>
 
-					{/* Recommended feelings */}
 					<RecommendedFeelings
 						feelings={RECOMMENDED_FEELINGS}
 						onFeelingClick={handleRecommendedFeelingClick}
 					/>
 
-					{/* Error message */}
 					{mutation.isError && (
 						<div className="rounded-lg bg-red-50 p-4 text-red-500 dark:bg-red-950/20">
 							{mutation.error instanceof Error
@@ -94,7 +90,6 @@ export function AuthenticatedHome() {
 						</div>
 					)}
 
-					{/* Loading state or palette display */}
 					{mutation.isPending ? (
 						<LoadingSkeletons />
 					) : (
