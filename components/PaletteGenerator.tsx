@@ -1,8 +1,8 @@
+import type React from "react";
+import { useState } from "react";
 import type { Palette } from "@/lib/palette-generator";
 import { getFallbackPalettes, getMockPalettes } from "@/lib/palette-queries";
 import { trpc } from "@/lib/trpc/client";
-import type React from "react";
-import { useState } from "react";
 
 interface PaletteGeneratorProps {
 	useMockData?: boolean;
