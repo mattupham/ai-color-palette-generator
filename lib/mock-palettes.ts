@@ -54,26 +54,24 @@ const professionalPalettes: Palette[] = [
 	},
 ];
 
-// Collection of all mock palettes by feeling
-const mockPalettesByFeeling: Record<string, Palette[]> = {
+// Collection of all mock palettes by vibe
+const mockPalettesByVibe: Record<string, Palette[]> = {
 	professional: professionalPalettes,
 };
 
-// Function to get mock palettes based on feeling
-export function getMockPalettes(feeling: string): Palette[] | null {
-	const normalizedFeeling = feeling.toLowerCase().trim();
-
-	console.log("normalizedFeeling", normalizedFeeling);
+// Function to get mock palettes based on vibe
+export function getMockPalettes(vibe: string): Palette[] | null {
+	const normalizedVibe = vibe.toLowerCase().trim();
 
 	// Check for exact match first
-	if (mockPalettesByFeeling[normalizedFeeling]) {
-		return mockPalettesByFeeling[normalizedFeeling];
+	if (mockPalettesByVibe[normalizedVibe]) {
+		return mockPalettesByVibe[normalizedVibe];
 	}
 
 	// Look for partial matches
-	for (const key of Object.keys(mockPalettesByFeeling)) {
-		if (normalizedFeeling.includes(key) || key.includes(normalizedFeeling)) {
-			return mockPalettesByFeeling[key];
+	for (const key of Object.keys(mockPalettesByVibe)) {
+		if (normalizedVibe.includes(key) || key.includes(normalizedVibe)) {
+			return mockPalettesByVibe[key];
 		}
 	}
 

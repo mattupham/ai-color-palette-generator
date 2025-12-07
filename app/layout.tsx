@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import type React from "react";
 import { ThemeProvider } from "@/components/theme-provider";
-import { QueryProvider } from "@/providers/query-provider";
+import { TRPCProvider } from "@/lib/trpc/provider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-	title: "Color Palette Generator",
-	description: "Generate color palettes based on your vibe",
+	title: "AI Color Palette Generator",
+	description: "Generate beautiful color palettes with AI based on your vibe",
 };
 
 export default function RootLayout({
@@ -26,7 +26,7 @@ export default function RootLayout({
 					disableTransitionOnChange
 					enableSystem
 				>
-					<QueryProvider>{children}</QueryProvider>
+					<TRPCProvider>{children}</TRPCProvider>
 				</ThemeProvider>
 			</body>
 		</html>

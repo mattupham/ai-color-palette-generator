@@ -1,70 +1,63 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Palette } from "@/lib/palette-generator";
-import {
-	getFallbackPalettes,
-	getMockPalettes,
-	usePaletteMutation,
-} from "@/lib/palette-queries";
+import { getFallbackPalettes, getMockPalettes } from "@/lib/palette-queries";
+import { trpc } from "@/lib/trpc/client";
 
-export function usePaletteGenerator(defaultFeeling: string) {
-	const [feeling, setFeeling] = useState(defaultFeeling);
+export function usePaletteGenerator(defaultVibe: string) {
+	const [vibe, setVibe] = useState(defaultVibe);
 	const [inputValue, setInputValue] = useState("");
 	const [palettes, setPalettes] = useState<Palette[] | undefined>(undefined);
 
-	// Use React Query mutation for generating palettes
-	const mutation = usePaletteMutation();
+	const mutation = trpc.palette.generatePalettes.useMutation();
 
-	// Core function to generate a palette based on feeling
-	const generatePalette = (feelingText: string) => {
-		// Try to get mock palettes first
-		const mockPalettes = getMockPalettes(feelingText.toLowerCase());
+	const generatePalette = useCallback(
+		(vibeText: string) => {
+			const mockPalettes = getMockPalettes(vibeText.toLowerCase());
 
-		// If we have mock palettes, use them
-		if (mockPalettes && mockPalettes.length > 0) {
-			setPalettes(mockPalettes);
-		} else {
-			// Make API call for AI-generated palettes
-			mutation.mutate(feelingText, {
-				onSuccess: (data) => {
-					setPalettes(data.palettes);
-				},
-				onError: () => {
-					// Use fallback palettes on error
-					setPalettes(getFallbackPalettes());
-				},
-			});
-		}
-	};
+			if (mockPalettes && mockPalettes.length > 0) {
+				setPalettes(mockPalettes);
+			} else {
+				mutation.mutate(
+					{ vibe: vibeText },
+					{
+						onSuccess: (data) => {
+							setPalettes(data.palettes);
+						},
+						onError: () => {
+							setPalettes(getFallbackPalettes());
+						},
+					},
+				);
+			}
+		},
+		[mutation],
+	);
 
-	// Load professional palette by default
-	// biome-ignore lint/correctness/useExhaustiveDependencies: generatePalette is stable and doesn't need to be in dependencies
 	useEffect(() => {
-		generatePalette(defaultFeeling);
-	}, [defaultFeeling]);
+		generatePalette(defaultVibe);
+	}, [defaultVibe, generatePalette]);
 
-	// Handle form submission
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!inputValue.trim()) return;
 
-		setFeeling(inputValue);
+		setVibe(inputValue);
 		generatePalette(inputValue);
 	};
 
-	// Handle clicking on a recommended feeling
-	const handleRecommendedFeelingClick = (recommendedFeeling: string) => {
-		setInputValue(recommendedFeeling);
-		setFeeling(recommendedFeeling);
-		generatePalette(recommendedFeeling);
+	const handleRecommendedVibeClick = (recommendedVibe: string) => {
+		setInputValue(recommendedVibe);
+		setVibe(recommendedVibe);
+		generatePalette(recommendedVibe);
 	};
 
 	return {
-		feeling,
+		vibe,
 		inputValue,
 		setInputValue,
 		palettes,
 		mutation,
 		handleSubmit,
-		handleRecommendedFeelingClick,
+		handleRecommendedVibeClick,
 	};
 }

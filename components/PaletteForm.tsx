@@ -24,6 +24,7 @@ export function PaletteForm({
 		>
 			<Input
 				className="flex-1"
+				disabled={isPending}
 				onChange={(e) => setInputValue(e.target.value)}
 				placeholder="My vibe is..."
 				value={inputValue}

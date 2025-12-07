@@ -5,6 +5,18 @@ const nextConfig = {
 	},
 	images: {
 		unoptimized: true,
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "lh3.googleusercontent.com",
+				pathname: "/**",
+			},
+			{
+				protocol: "https",
+				hostname: "avatars.githubusercontent.com",
+				pathname: "/**",
+			},
+		],
 	},
 	async headers() {
 		return [
@@ -23,6 +35,11 @@ const nextConfig = {
 						key: "Referrer-Policy",
 						value: "strict-origin-when-cross-origin",
 					},
+					{
+						key: "Content-Security-Policy",
+						value:
+							"default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://lh3.googleusercontent.com https://avatars.githubusercontent.com; connect-src 'self' https://lh3.googleusercontent.com https://avatars.githubusercontent.com; font-src 'self' data:;",
+					},
 				],
 			},
 			{
@@ -38,7 +55,8 @@ const nextConfig = {
 					},
 					{
 						key: "Content-Security-Policy",
-						value: "default-src 'self'; script-src 'self'",
+						value:
+							"default-src 'self'; script-src 'self'; connect-src 'self' https://lh3.googleusercontent.com https://avatars.githubusercontent.com; img-src 'self' data: https://lh3.googleusercontent.com https://avatars.githubusercontent.com;",
 					},
 				],
 			},
