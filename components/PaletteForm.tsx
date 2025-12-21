@@ -1,6 +1,7 @@
-import type React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import type React from "react";
+import { memo } from "react";
 
 interface PaletteFormProps {
 	inputValue: string;
@@ -9,7 +10,7 @@ interface PaletteFormProps {
 	isPending: boolean;
 }
 
-export function PaletteForm({
+export const PaletteForm = memo(function PaletteForm({
 	inputValue,
 	setInputValue,
 	onSubmit,
@@ -34,4 +35,4 @@ export function PaletteForm({
 			</Button>
 		</form>
 	);
-}
+});

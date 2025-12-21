@@ -1,33 +1,49 @@
-import { useCallback, useEffect, useRef } from "react";
 import { PaletteCard } from "@/components/PaletteCard";
 import type { Palette } from "@/lib/palette-generator";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 
 interface PaletteDisplayProps {
 	palettes: Palette[];
-	accessibilityStates: Record<number, boolean>;
-	onToggleAccessibility: (index: number) => void;
-	activePaletteIndex: number | null;
 }
 
-export function PaletteDisplay({
+export const PaletteDisplay = memo(function PaletteDisplay({
 	palettes,
-	accessibilityStates,
-	onToggleAccessibility,
-	activePaletteIndex,
 }: PaletteDisplayProps) {
+	// Move accessibility state into this component
+	const [accessibilityStates, setAccessibilityStates] = useState<
+		Record<number, boolean>
+	>({});
+	const [activePaletteIndex, setActivePaletteIndex] = useState<number | null>(
+		null,
+	);
+
 	// Create a stable ref object - MUST be before any conditional returns
 	const paletteRefs = useRef<Map<number, HTMLDivElement | null>>(new Map());
 	const lastAccessibilityStates = useRef<Record<number, boolean>>({});
 
-	// Memoize the set ref callback - MUST be before any conditional returns
-	const setRef = useCallback(
-		(index: number) => (el: HTMLDivElement | null) => {
-			paletteRefs.current.set(index, el);
-		},
-		[],
-	);
+	// Toggle accessibility for a specific palette
+	const toggleAccessibility = (index: number) => {
+		const isCurrentlyOpen = !!accessibilityStates[index];
+		const newState = !isCurrentlyOpen;
 
-	// Function to center the active palette
+		// Create a new state object with all dropdowns closed
+		const newAccessibilityStates: Record<number, boolean> = {};
+
+		// If we're opening this dropdown, set only this one to true
+		if (newState) {
+			newAccessibilityStates[index] = true;
+		}
+
+		setAccessibilityStates(newAccessibilityStates);
+		setActivePaletteIndex(newState ? index : null);
+	};
+
+	// Simple ref setter - no need for useCallback
+	const setRef = (index: number) => (el: HTMLDivElement | null) => {
+		paletteRefs.current.set(index, el);
+	};
+
+	// Function to center the active palette - memoized to satisfy useEffect deps
 	const centerActivePalette = useCallback((index: number) => {
 		const element = paletteRefs.current.get(index);
 		if (!element) return;
@@ -56,7 +72,7 @@ export function PaletteDisplay({
 
 		// Store current state for next comparison
 		lastAccessibilityStates.current = { ...accessibilityStates };
-	}, [accessibilityStates, centerActivePalette, palettes.length]);
+	}, [accessibilityStates, palettes.length, centerActivePalette]);
 
 	// Also center when active palette changes
 	useEffect(() => {
@@ -86,7 +102,7 @@ export function PaletteDisplay({
 						<PaletteCard
 							index={index}
 							key={index}
-							onToggleAccessibility={() => onToggleAccessibility(index)}
+							onToggleAccessibility={() => toggleAccessibility(index)}
 							palette={palette}
 							setRef={setRef(index)}
 							shouldFade={shouldFade}
@@ -97,4 +113,4 @@ export function PaletteDisplay({
 			</div>
 		</div>
 	);
-}
+});

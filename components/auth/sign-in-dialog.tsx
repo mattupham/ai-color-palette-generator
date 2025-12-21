@@ -7,6 +7,7 @@ export function SignInDialog() {
 	const handleSignIn = async () => {
 		await signIn.social({
 			provider: "google",
+			callbackURL: "/",
 		});
 	};
 

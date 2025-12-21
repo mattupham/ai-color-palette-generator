@@ -1,22 +1,15 @@
 "use client";
 
 import { CheckCircle2, ChevronDown, XCircle } from "lucide-react";
+import { useMemo } from "react";
 import { CopyButton } from "@/components/copy-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { analyzeContrast } from "@/lib/color-accessibility";
 
-interface AccessibilityViewProps {
-	colors: string[];
-	showAccessibility: boolean;
-}
-
-export function AccessibilityView({
-	colors,
-	showAccessibility,
-}: AccessibilityViewProps) {
-	// Get best text colors (white or black) for each background color
-	const colorPairs = colors.map((bgColor) => {
+// Shared utility function to calculate color pairs
+function calculateColorPairs(colors: string[]) {
+	return colors.map((bgColor) => {
 		// Analyze with white text
 		const whiteTextAnalysis = analyzeContrast("#FFFFFF", bgColor);
 		// Analyze with black text
@@ -41,6 +34,19 @@ export function AccessibilityView({
 					isWhiteText: false,
 				};
 	});
+}
+
+interface AccessibilityViewProps {
+	colors: string[];
+	showAccessibility: boolean;
+}
+
+export function AccessibilityView({
+	colors,
+	showAccessibility,
+}: AccessibilityViewProps) {
+	// Memoize expensive accessibility calculations
+	const colorPairs = useMemo(() => calculateColorPairs(colors), [colors]);
 
 	// Calculate overall score based on number of pairs that meet standards
 	const passedAA = colorPairs.filter(
@@ -152,26 +158,8 @@ export function AccessibilityToggle({
 
 // Helper component to show if a palette passes accessibility standards
 function AccessibilityCheck({ colors }: { colors: string[] }) {
-	// Get best text colors (white or black) for each background color
-	const colorPairs = colors.map((bgColor) => {
-		// Analyze with white text
-		const whiteTextAnalysis = analyzeContrast("#FFFFFF", bgColor);
-		// Analyze with black text
-		const blackTextAnalysis = analyzeContrast("#000000", bgColor);
-
-		// Return the better contrast option
-		return whiteTextAnalysis.contrastRatio > blackTextAnalysis.contrastRatio
-			? {
-					backgroundColor: bgColor,
-					contrastRatio: whiteTextAnalysis.contrastRatio,
-					level: whiteTextAnalysis.level,
-				}
-			: {
-					backgroundColor: bgColor,
-					contrastRatio: blackTextAnalysis.contrastRatio,
-					level: blackTextAnalysis.level,
-				};
-	});
+	// Memoize expensive accessibility calculations - reuse shared utility
+	const colorPairs = useMemo(() => calculateColorPairs(colors), [colors]);
 
 	// Check different accessibility levels
 	const passedAA = colorPairs.filter(
