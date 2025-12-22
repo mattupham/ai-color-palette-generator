@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { verifySession } from "@/lib/dal";
 import { AuthenticatedHome } from "@/components/AuthenticatedHome";
+import { verifySession } from "@/lib/dal";
 
 export default async function Home() {
 	const session = await verifySession();
