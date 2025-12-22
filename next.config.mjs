@@ -35,11 +35,11 @@ const nextConfig = {
 						key: "Referrer-Policy",
 						value: "strict-origin-when-cross-origin",
 					},
-					{
-						key: "Content-Security-Policy",
-						value:
-							"default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://lh3.googleusercontent.com https://avatars.githubusercontent.com; connect-src 'self' https://lh3.googleusercontent.com https://avatars.githubusercontent.com; font-src 'self' data:;",
-					},
+				{
+					key: "Content-Security-Policy",
+					value:
+						"default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://lh3.googleusercontent.com https://avatars.githubusercontent.com; connect-src 'self' https://lh3.googleusercontent.com https://avatars.githubusercontent.com https://vercel.live; font-src 'self' data:;",
+				},
 				],
 			},
 			{
