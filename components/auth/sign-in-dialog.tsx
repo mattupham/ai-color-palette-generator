@@ -7,7 +7,8 @@ export function SignInDialog() {
 	const handleSignIn = async () => {
 		await signIn.social({
 			provider: "google",
-			callbackURL: "/",
+			// Let Better Auth handle the redirect after callback
+			// The client-side session check will handle navigation
 		});
 	};
 
