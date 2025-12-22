@@ -9,10 +9,14 @@ export async function proxy(request: NextRequest) {
 		return NextResponse.next();
 	}
 
-	// If this is a redirect from OAuth callback (has error or success params from Better Auth),
-	// let it through to avoid race conditions with cookie setting
+	// Check if this request is coming from the OAuth callback
+	// Better Auth may add these params, or we check the referer
 	const hasAuthParams = searchParams.has("error") || searchParams.has("error_description");
-	if (hasAuthParams) {
+	const referer = request.headers.get("referer") || "";
+	const isFromAuthCallback = referer.includes("/api/auth/callback");
+	
+	// If coming from OAuth callback, always let it through to avoid race conditions
+	if (hasAuthParams || isFromAuthCallback) {
 		return NextResponse.next();
 	}
 
