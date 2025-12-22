@@ -1,6 +1,6 @@
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { PaletteCard } from "@/components/PaletteCard";
 import type { Palette } from "@/lib/palette-generator";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
 
 interface PaletteDisplayProps {
 	palettes: Palette[];

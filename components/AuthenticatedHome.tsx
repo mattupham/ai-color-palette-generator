@@ -1,5 +1,7 @@
 "use client";
 
+import { Github } from "lucide-react";
+import Link from "next/link";
 import { UserMenu } from "@/components/auth/user-menu";
 import { LoadingSkeletons } from "@/components/LoadingSkeletons";
 import { PaletteDisplay } from "@/components/PaletteDisplay";
@@ -7,8 +9,6 @@ import { PaletteForm } from "@/components/PaletteForm";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { usePaletteGenerator } from "@/hooks/usePaletteGenerator";
 import { getMockPalettes } from "@/lib/mock-palettes";
-import { Github } from "lucide-react";
-import Link from "next/link";
 
 export function AuthenticatedHome() {
 	const { inputValue, setInputValue, mutation, handleSubmit } =

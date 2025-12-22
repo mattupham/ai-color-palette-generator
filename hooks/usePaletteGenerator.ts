@@ -1,5 +1,5 @@
-import { trpc } from "@/lib/trpc/client";
 import { useCallback, useState } from "react";
+import { trpc } from "@/lib/trpc/client";
 
 export function usePaletteGenerator() {
 	const [inputValue, setInputValue] = useState("");

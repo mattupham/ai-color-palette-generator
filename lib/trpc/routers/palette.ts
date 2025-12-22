@@ -1,7 +1,7 @@
-import { env } from "@/env";
-import { getPaletteGeneratorPrompt } from "@/lib/prompts/palette-generator";
 import { OpenAI } from "openai";
 import { z } from "zod";
+import { env } from "@/env";
+import { getPaletteGeneratorPrompt } from "@/lib/prompts/palette-generator";
 import { protectedProcedure, router } from "../server";
 
 const openai = new OpenAI({
