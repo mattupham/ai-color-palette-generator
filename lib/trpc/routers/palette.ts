@@ -1,7 +1,7 @@
-import { OpenAI } from "openai";
-import { z } from "zod";
 import { env } from "@/env";
 import { getPaletteGeneratorPrompt } from "@/lib/prompts/palette-generator";
+import { OpenAI } from "openai";
+import { z } from "zod";
 import { protectedProcedure, router } from "../server";
 
 const openai = new OpenAI({
@@ -25,26 +25,19 @@ export const paletteRouter = router({
 		.mutation(async ({ input }) => {
 			const prompt = getPaletteGeneratorPrompt(input.vibe);
 
-			const response = await openai.chat.completions.create({
+			// Follow OpenAI's Responses API recommendations
+			const response = await openai.responses.create({
 				model: env.OPENAI_MODEL,
-				messages: [
-					{
-						role: "system",
-						content:
-							"You are an expert graphic designer and color palette generator that creates harmonious color schemes based on vibes or moods. You only respond with valid JSON.",
-					},
-					{
-						role: "user",
-						content: prompt,
-					},
-				],
-				temperature: 0.7,
-				response_format: { type: "json_object" },
+				input: prompt,
+				reasoning: {
+					effort: "minimal", // Options: minimal, low, medium, high, xhigh
+				},
 			});
 
-			const content = response.choices[0].message.content;
+			// Access output_text directly as per OpenAI documentation
+			const content = response.output_text;
 			if (!content) {
-				throw new Error("No content returned from OpenAI");
+				throw new Error("No output_text returned from OpenAI");
 			}
 
 			const data = JSON.parse(content);

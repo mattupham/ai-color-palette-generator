@@ -13,7 +13,7 @@ export const env = createEnv({
 		GOOGLE_CLIENT_ID: z.string(),
 		GOOGLE_CLIENT_SECRET: z.string(),
 		OPENAI_API_KEY: z.string(),
-		OPENAI_MODEL: z.string().default("gpt-4-turbo-preview"),
+		OPENAI_MODEL: z.string().default("gpt-5.2"),
 		NODE_ENV: z
 			.enum(["development", "test", "production"])
 			.default("development"),
