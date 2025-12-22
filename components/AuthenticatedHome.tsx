@@ -6,36 +6,17 @@ import { UserMenu } from "@/components/auth/user-menu";
 import { LoadingSkeletons } from "@/components/LoadingSkeletons";
 import { PaletteDisplay } from "@/components/PaletteDisplay";
 import { PaletteForm } from "@/components/PaletteForm";
-import { RecommendedVibes } from "@/components/RecommendedVibes";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useAccessibilityToggle } from "@/hooks/useAccessibilityToggle";
 import { usePaletteGenerator } from "@/hooks/usePaletteGenerator";
-
-const RECOMMENDED_VIBES = [
-	"professional",
-	"summer",
-	"autumn",
-	"happy",
-	"calm",
-	"creative",
-	"peaceful",
-	"nostalgic",
-];
-
-const DEFAULT_VIBE = RECOMMENDED_VIBES[0];
+import { getMockPalettes } from "@/lib/mock-palettes";
 
 export function AuthenticatedHome() {
-	const {
-		inputValue,
-		setInputValue,
-		palettes,
-		mutation,
-		handleSubmit,
-		handleRecommendedVibeClick,
-	} = usePaletteGenerator(DEFAULT_VIBE);
+	const { inputValue, setInputValue, mutation, handleSubmit } =
+		usePaletteGenerator();
 
-	const { accessibilityStates, activePaletteIndex, toggleAccessibility } =
-		useAccessibilityToggle();
+	// Use React Query data or fall back to default mock palette
+	const palettes =
+		mutation.data?.palettes ?? getMockPalettes("professional") ?? [];
 
 	return (
 		<div className="min-h-screen bg-background text-foreground">
@@ -74,11 +55,6 @@ export function AuthenticatedHome() {
 						setInputValue={setInputValue}
 					/>
 
-					<RecommendedVibes
-						onVibeClick={handleRecommendedVibeClick}
-						vibes={RECOMMENDED_VIBES}
-					/>
-
 					{mutation.isError && (
 						<div className="rounded-lg bg-red-50 p-4 text-red-500 dark:bg-red-950/20">
 							{mutation.error instanceof Error
@@ -90,12 +66,7 @@ export function AuthenticatedHome() {
 					{mutation.isPending ? (
 						<LoadingSkeletons />
 					) : (
-						<PaletteDisplay
-							accessibilityStates={accessibilityStates}
-							activePaletteIndex={activePaletteIndex}
-							onToggleAccessibility={toggleAccessibility}
-							palettes={palettes || []}
-						/>
+						<PaletteDisplay palettes={palettes} />
 					)}
 				</div>
 			</main>
