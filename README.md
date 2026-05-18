@@ -1,7 +1,5 @@
 # AI Color Palette Generator
 
-![Color Palette Generator](public/placeholder-logo.svg)
-
 A modern web application that generates beautiful, accessible color palettes based on vibes or moods using AI. Built with Next.js, React, and OpenAI.
 
 ## ✨ Features
